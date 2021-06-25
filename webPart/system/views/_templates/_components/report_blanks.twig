@@ -1,0 +1,56 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header">
+            <h5 class="modal-title">Список рапортов</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            {% for rb in reportblanks %}
+                <div class="bg-light text-dark p-3 mt-3 rounded">
+                    <div class="text-center font-weight-bold">РАПОРТ #{{rb.id}}</div>
+                    <div class="mt-2 position-absolute">
+                        Департамент: {{rb.dept_name}}
+                    </div>
+                    <div class="mt-2 text-right">
+                        Кому: {{rb.rb_to}}
+                    </div>
+                    <div class="mt-4 text-center">
+                        ОПИСАНИЕ:<br>
+                        {{rb.description}}
+                    </div>
+                    {% if rb.additional|length > 0 %}
+                        <div class="font-hack mt-4 text-center">
+                            {{rb.additional|raw}}
+                        </div>
+                    {% endif %}
+                    <div class="mt-4 d-flex flex-row">
+                        <div class="w-50">
+                            От кого: {{rb.rb_from}}, {{rb.rank}}
+                        </div>
+                        <div class="text-right w-50">
+                            {{rb.time}}, {{rb.created_time|date('d/m/Y')}}
+                        </div>
+                    </div>
+                    {% if rb.is_sv %}
+                        {% if rb.status == 1 %}
+                        <hr>
+                        <div class="d-flex flex-column flex-md-row">
+                            <button class="btn btn-flat btn-block mx-2" onclick="signRB({{rb.id}})">Подписать</button>
+                            <button class="btn btn-flat btn-block mx-2" onclick="declineRB({{rb.id}})">Отклонить</button>
+                            {# <button class="btn btn-dark btn-block mx-2">ff</button> #}
+                        </div>
+                        {% elseif rb.status == 2 or rb.status == 0 %}
+                        <hr>
+                        <div class="d-flex flex-column flex-md-row">
+                            <button class="btn btn-flat btn-block mx-2" onclick="archiveRB({{rb.id}})">Архивировать</button>
+                            {# <button class="btn btn-dark btn-block mx-2">ff</button> #}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

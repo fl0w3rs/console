@@ -1,0 +1,69 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header text-center position-relative">
+            <div class="position-absolute"><a onclick="viewCaseFile('{{casefile['id']}}')"><i class="fas fa-chevron-left"></i></a></div>
+            <h5 class="modal-title mx-auto">CASE FILE EDIT</h5>
+        </div>
+        <div class="modal-body" id="ecf-form">
+            <div class="row">
+                <input type="hidden" id="ecf-id" value="{{casefile.id}}">
+                <div class="col-12">
+                    <small class="text-muted">Название</small>
+                    <input type="text" id="ecf-title" class="form-control bg-form" value="{{casefile.title}}">
+                </div>
+                <div class="col-md-4 col-12 mt-1">
+                    <small class="text-muted">Тяжесть</small>
+                    <select class="border-0 mdb-select m-0 md-outline md-form elevation--z4 rounded" id="ecf-severity">
+                        <option value="1" {% if casefile.severity == 1 %}selected{% endif %}>Лёгкая</option>
+                        <option value="2" {% if casefile.severity == 2 %}selected{% endif %}>Средняя</option>
+                        <option value="3" {% if casefile.severity == 3 %}selected{% endif %}>Тяжёлая</option>
+                    </select>
+                </div>
+                <div class="col-md-4 col-12 mt-1">
+                    <small class="text-muted">Статус</small>
+                    <select class="border-0 mdb-select m-0 md-outline md-form elevation--z4 rounded" id="ecf-status">
+                        <option value="0" {% if casefile.status == 0 %}selected{% endif %}>Открыто</option>
+                        <option value="1" {% if casefile.status == 1 %}selected{% endif %}>Заморожено</option>
+                        <option value="2" {% if casefile.status == 2 %}selected{% endif %}>Закрыто</option>
+                    </select>
+                </div>
+                <div class="col-md-4 col-12 mt-1">
+                    <small class="text-muted">Субъект</small>
+                    <input type="text" id="ecf-subject" class="form-control bg-form" value="{{casefile.subject}}">
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Описание</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="ecf-description" rows="4">{{casefile.description}}</textarea>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Улики</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="ecf-evidence" rows="4">{{casefile.evidence}}</textarea>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Свидетели</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="ecf-witnesses" rows="4">{{casefile.witnesses}}</textarea>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Участвующие детективы</small>
+                    <select class="border-0 mdb-select m-0 md-outline md-form elevation--z4 rounded" id="ecf-detectives" multiple searchable="Поиск">
+                        <option disabled selected></option>
+                        {% for user in all_users %}
+                            <option value="{{user.id}}" {% if user.selected == true %}selected{% endif %}>{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Преступления</small>
+                    <select id="ecf-reasons" class="mt-1 border-0 elevation--z1 text-light scrollbar scrollbar-dark custom-select" size="8" multiple>
+                        {% for k, v in ar %}
+                            <option value="{{k}}" {% if v.selected == true %}selected{% endif %}>{{v.text}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" onclick="doEditCaseFile()" class="btn btn-primary btn-block elevation--z1"><i class="fas fa-plus" aria-hidden="true"></i> Сохранить</button>
+        </div>
+    </div>
+</div>

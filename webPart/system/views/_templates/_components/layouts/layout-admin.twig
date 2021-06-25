@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %} — CONSOLE</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        {% include "_components/includes/css.twig" %}
+	</head>
+	<body>
+        {% include "_components/layouts/preloader.twig" %}
+
+        <header>
+
+            <nav class="navbar navbar-expand-md navbar-dark elevation--z4">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        {# <code>&gt; Console_</code> #}
+                        <img src="{{config['dir_prefix']}}assets/images/console__logo.png?1" alt="logo" height="30">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{config['dir_prefix']}}admin/dashboard">Рабочий стол</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{config['dir_prefix']}}admin/departments">Департаменты</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav ml-auto">
+                            {% include "_components/profile-navbar.twig" %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+        </header>
+
+        <div class="h-100 container-fluid">
+            {% block content %}{% endblock %}
+        </div>
+
+        {% include "_components/includes/js.twig" %}
+
+        <script type="text/javascript" src="{{config['dir_prefix']}}assets/js/main.js?ver={{version}}"></script>
+        <script type="text/javascript" src="{{config['dir_prefix']}}assets/js/admin/main.js?ver={{version}}"></script>
+
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

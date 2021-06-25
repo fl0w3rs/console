@@ -1,0 +1,49 @@
+{% extends "_components/layouts/layout-admin.twig" %}
+
+{% block title %}Новый департамент{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="mt-3 col-12 col-md-8 col-lg-6">
+        <div class="py-2 rounded text-center bg-main">
+            <h2>Новый департамент</h2>
+            <div class='px-5 pt-2'>
+                <input type="text" id="dept-name" class="form-control bg-form mt-3" placeholder="Название">
+                <select id="dept-groups" class="mdb-select md-outline md-form" multiple>
+                    <option value="" disabled selected>Выберите группы департамента</option>
+                    {% for group in groups %}
+                        <option value="{{group['g_id']}}" >{{group['word_custom']}}</option>
+                    {% endfor %}
+                </select>
+                <select id="dept-supervisor-group" class="mdb-select md-outline md-form bg-form">
+                    <option value="" disabled selected>Выберите группу супервайзера</option>
+                    {% for group in groups %}
+                        <option value="{{group['g_id']}}">{{group['word_custom']}}</option>
+                    {% endfor %}
+                </select>
+                <select id="dept-training" class="mdb-select md-outline md-form bg-form">
+                    <option value="" disabled selected>Выберите поле тренировки</option>
+                    {% for field in fields %}
+                        <option value="field_{{field['pf_id']}}">{{field['word_custom']}}</option>
+                    {% endfor %}
+                </select>
+                <select id="dept-type" class="mdb-select md-outline md-form bg-form">
+                    <option value="" disabled selected>Выберите тип департамента</option>
+                    {% for id, dept in types %}
+                        {% if id != 0 %}
+                        <option value="{{id}}">{{dept['name']}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <input type="button" data-action="new" class="btn btn-lg btn-flat" value="Создать">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/admin/departments/new.js?ver={{version}}"></script>
+{% endblock %}

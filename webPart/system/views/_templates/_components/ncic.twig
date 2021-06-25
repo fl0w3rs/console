@@ -1,0 +1,224 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header">
+            <h5 class="modal-title">NCIC</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="font-hack">
+            {% if ncic_chars|length > 1 %}
+                <i class="fas fa-search"></i> Найдено {{ncic_chars|length}} по заданным данным<br/><br/>
+            {% endif %}
+
+            {% for char_key, char in ncic_chars %}
+                {% if ncic_chars|length > 1 %}
+                    <button type="button" class="btn btn-lg btn-flat p-0 teal-text" onclick="ncicSearch('{{char.ssn}}')">{{char.name}}</button>
+                {% else %}
+                    <ul class="nav nav-tabs border-0" role="tablist">
+                        <li class="nav-item rounded">
+                            <a class="nav-link active rounded mx-1" id="char{{char.id}}-info-tab" data-toggle="tab" href="#char{{char.id}}-info-tabcontent" role="tab" aria-controls="char{{char.id}}-info-tabcontent"
+                            aria-selected="true">Информация</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link rounded mx-1" id="char{{char.id}}-citations-tab" data-toggle="tab" href="#char{{char.id}}-citations-tabcontent" role="tab" aria-controls="char{{char.id}}-citations-tabcontent"
+                            aria-selected="false">Штрафы</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link rounded mx-1" id="char{{char.id}}-arrests-tab" data-toggle="tab" href="#char{{char.id}}-arrests-tabcontent" role="tab" aria-controls="char{{char.id}}-arrests-tabcontent"
+                            aria-selected="false">Аресты</a>
+                        </li>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link rounded dropdown-toggle mx-1" type="button" id="charNcicNewDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Новый</a>
+                                <div class="dropdown-menu" aria-labelledby="charNcicNewDropdown">
+                                    <a class="dropdown-item" onclick="showNewCitation({{char.id}})">Штраф</a>
+                                    <a class="dropdown-item" onclick="showNewArrest({{char.id}})">Арест</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="char{{char.id}}-info-tabcontent" role="tabpanel" aria-labelledby="char{{char.id}}-info-tab">
+                            <div class="py-2 px-3 text-dark" style="border-radius: 15px; background-color: #DFD8CB">
+                                <span class="text-center"><h4 class="font-weight-bold mb-2">STATE OF SAN ANDREAS IDCARD</h4></span>
+                                <div class="row">
+                                    <div class="col-lg-3 col-12 text-center text-lg-left">
+                                        <img src="{% if char.image|length > 1 %}{{config['dir_prefix']}}uploads/avatars/{{char.image}}{% else %}http://placehold.it/95x95{% endif %}" width="95" height="95" class="border border-dark">
+                                    </div>
+                                    <div class="col-lg-9 col-12 text-center text-lg-left">
+                                        Имя: {{char.name|split(' ')[0]}}<br/>
+                                        {% if char.name|split(' ')|length > 1 %}Фамилия: {{char.name|split(' ')[1]}}<br/>{% endif %}
+                                        Дата рождения: {{char.birth}}<br/>
+                                        Пол: {{sex_types[char.sex]}}<br/>
+                                        Раса: {{races[char.race]}}<br/>
+                                        SSN: {{char.ssn}}<br/>
+                                    </div>
+                                </div>
+
+                                <img class="w-100 mt-2" src="{{config['dir_prefix']}}assets/images/idcard__barcode.gif"></img>
+                                
+                            </div>
+
+                            <div class="py-3 px-3 mt-3" style="border-radius: 15px; background-color: #37AFE2">
+                                <span class="text-center"><h4 class="font-weight-bold mb-3">UNITED STATES MEDICAL CARD</h4></span>
+                                <div class="row">
+                                    <div class="col-lg-3 col-12 text-center text-lg-left">
+                                        <img src="{% if char.image|length > 1 %}{{config['dir_prefix']}}uploads/avatars/{{char.image}}{% else %}http://placehold.it/95x95{% endif %}" width="95" height="95" class="border border-dark">
+                                    </div>
+                                    <div class="col-lg-9 col-12 text-center text-lg-left">
+                                        Болезни: {{char.med_diseases|length > 0 ? char.med_diseases : 'нет'}}<br/>
+                                        Аллергии: {{char.med_allergy|length > 0 ? char.med_allergy : 'нет'}}<br/>
+                                        Употребляемые препараты: {{char.med_drugs|length > 0 ? char.med_drugs : 'нет'}}<br/>
+                                        Контакт на случай ЧС: {{char.med_contact|length > 0 ? char.med_contact : 'нет'}}<br/>
+                                        Рост: {{char.med_height|length > 0 ? char.med_height : 'не указан'}}<br/>
+                                        Вес: {{char.med_weight|length > 0 ? char.med_weight : 'не указан'}}<br/>
+                                    </div>
+                                </div>
+
+                                <div class="text-center mt-2 mb-1"><span style="font-size: 11px;">SAN ANDREAS MEDICAL CENTER</span></div>
+
+                            </div>
+                            
+                            {% if char.driving_license != 4 %}
+                                <div class="py-3 px-3 mt-3 text-dark" style="border-radius: 15px; background-color: #DFD8CB">
+                                    <span class="text-center"><h4 class="font-weight-bold mb-2">DRIVING LICENSE</h4></span>
+                                    <div class="row">
+                                        <div class="col-lg-3 col-12 text-center text-lg-left">
+                                            <img src="{% if char.image|length > 1 %}{{config['dir_prefix']}}uploads/avatars/{{char.image}}{% else %}http://placehold.it/95x95{% endif %}" width="95" height="95" class="border border-dark">
+                                        </div>
+                                        <div class="col-lg-9 col-12 text-center text-lg-left">
+                                            Имя: {{char.name|split(' ')[0]}}<br/>
+                                            {% if char.name|split(' ')|length > 1 %}Фамилия: {{char.name|split(' ')[1]}}<br/>{% endif %}
+                                            Статус лицензии: {{driving_license_types[char.driving_license]}}<br/>
+                                            Дата рождения: {{char.birth}}<br/>
+                                            Пол: {{sex_types[char.sex]}}<br/>
+                                            Раса: {{races[char.race]}}<br/>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="py-3 px-3 mt-3 text-light bg-dark" style="border-radius: 15px;">
+                                <span class="text-center"><h4 class="font-weight-bold mb-2">NATIONAL CRIMES INFORMCENTER</h4></span>
+                                Имя: {{char.name|split(' ')[0]}}<br/>
+                                {% if char.name|split(' ')|length > 1 %}Фамилия: {{char.name|split(' ')[1]}}<br/>{% endif %}
+                                <br/>
+                                Статус лицензии: {{gun_license_types[char.gun_license]}}<br/>
+                                {% for weap in ncic_chars_weapons[char_key] %}
+                                    <br/>
+                                    Марка-Модель: {{weap['model']}}<br/>
+                                    Серийный номер: <a class="text-primary" onclick="fldSearch('{{weap['serial']}}')">{{weap['serial']}}</a><br/>
+                                {% endfor %}
+                            </div>
+                            <br/>
+                            Адрес проживания: {{char.address|length > 0 ? char.address : 'не указан'}};<br/>
+                            Работа: {{char.work|length > 0 ? char.work : 'не указана'}};<br/>
+                            <br/>
+                            Описание: 
+                            {% if char.description|length > 0 %}
+                                <br/>===<br/>
+                                {{char.description}}<br/>
+                                ===<br/>
+                            {% else %}
+                                не указано;<br/>
+                            {% endif %}
+                            <br/>
+                            
+                            {% if ncic_chars_vehicles[char_key]|length > 0 %}
+                                <br/>
+                                Зарегистрированные транспортные средства:<br/>
+                                {% for veh in ncic_chars_vehicles[char_key] %}
+                                    - <a class="text-primary" onclick="dmvSearch('{{veh['vin']}}')">{{veh['mark']}} {{veh['model']}} [{{veh['plate']}}]</a>;<br/>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="tab-pane fade" id="char{{char.id}}-citations-tabcontent" role="tabpanel" aria-labelledby="char{{char.id}}-citations-tab">
+
+                            {% if ncic_chars_citations[char_key]|length > 0 %}
+                                {% for citation in ncic_chars_citations[char_key] %}
+                                    <div class="bg-light text-dark mt-3 p-3 rounded">
+                                        <div class="font-weight-bold position-absolute d-flex flex-row">SAN ANDREAS TRAFFIC CITATION</div>
+                                        <div class="font-weight-bold mb-2 text-right">#{{citation.title}}</div>
+                                        <div class="text-center mt-3"><img style="width: 50%" src="{{config['dir_prefix']}}assets/images/citation__barcode.gif?1"></div>
+                                        {# <div class="text-center"><img width="128" height="128" src="{{config['dir_prefix']}}assets/images/citation__emblem.png"></div> #}
+                                        <div class="border border-dark px-2 mt-2">Имя и Фамилия: <small>{{char.name}}</small></div>
+                                        <div class="border border-dark px-2 mt-1">Кем выдано: <small>{{citation.issuer_name|split(' ')|last}}</small></div>
+                                        <br/>
+                                        <div class="border border-dark px-2">
+                                            Нарушения:<br/>
+                                            {% for id in citation.reasons|split(',') %}
+
+                                                <small>• {{citation_reasons[id]}}</small><br/>
+
+                                            {% endfor %}
+                                        </div>
+                                        <br/>
+                                        <div class="border border-dark px-2">Место нарушения: <small>{{citation.location}}</small></div>
+                                        <div class="border border-dark px-2 mt-1">Время нарушения: <small>{{citation.time}}, {{citation.created_time|date('d/m/Y')}}</small></div>
+                                        <br/>
+                                        <div class="border border-dark px-2">Детали: <small>{{citation.details}}</small></div>
+                                        <br/>
+                                        <div class="border border-dark px-2">Статус: <small>
+                                        {% if citation.status == 0 %}
+                                            Не оплачен
+                                        {% elseif citation.status == 1 %}
+                                            Оплачен ({{citation.pay_time|date('H:i, d/m/Y', 'Europe/Moscow')}})
+                                        {% endif %}
+                                        {% if citation.expired == true %} <span class="text-danger font-weight-bold">(просрочен)</span>{% endif %}
+                                        </small></div>
+                                        <br/>
+                                        <div class="text-center row">
+                                            <div class="col-12 col-md-10 mx-auto">
+                                                <small>Payment is required not later than 7 calendar days from the date of the violation.<br/>
+                                                SEE REVERSE FOR IMPORTANT INSTRUCTIONS PAYMENT MUST BE IN U.S. FUNDS</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                            <div class="grey-text text-center">Штрафов нет</div> 
+                            {% endif %}
+
+                        </div>
+                        <div class="tab-pane fade" id="char{{char.id}}-arrests-tabcontent" role="tabpanel" aria-labelledby="char{{char.id}}-arrests-tab">
+                        
+                            {% if ncic_chars_arrests[char_key]|length > 0 %}
+                                {% for arrest in ncic_chars_arrests[char_key] %}
+                                    <div class="bg-light text-dark mt-3 p-3 rounded">
+                                        <div class="font-weight-bold position-absolute d-flex flex-row">ARREST REPORT</div>
+                                        <div class="font-weight-bold mb-2 text-right">#{{arrest.title}}</div>
+                                        <div class="border border-dark px-2 mt-2">Имя и Фамилия: <small>{{char.name}}</small></div>
+                                        <div class="border border-dark px-2 mt-1">Кем выдано: <small>{{arrest.issuer_name|split(' ')|last}}</small></div>
+                                        <br/>
+                                        <div class="border border-dark px-2">
+                                            Нарушения:<br/>
+                                            {% for id in arrest.reasons|split(',') %}
+
+                                                <small>• {{arrest_reasons[id]}}</small><br/>
+
+                                            {% endfor %}
+                                        </div>
+                                        <br/>
+                                        <div class="border border-dark px-2">Место ареста: <small>{{arrest.location}}</small></div>
+                                        <div class="border border-dark px-2 mt-1">Время ареста: <small>{{arrest.time}}, {{arrest.created_date|date('d/m/Y')}}</small></div>
+                                        <br/>
+                                        <div class="border border-dark px-2">Детали: <small>{{arrest.details}}</small></div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                            <div class="grey-text text-center">Арестов нет</div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    
+                {% endif %}
+            {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>

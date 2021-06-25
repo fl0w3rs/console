@@ -1,0 +1,48 @@
+{% extends "_components/layouts/layout-admin.twig" %}
+
+{% block title %}{{department.name}}{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="mt-3 col-12 col-md-8 col-lg-6">
+        <div class="py-2 rounded text-center bg-main">
+            <h2>Редактирование #{{department.id}}</h2>
+            <div class='px-5 pt-2'>
+                <input type="text" value="{{department.name}}" id="dept-name" class="form-control bg-form mt-3" placeholder="Название">
+                <select id="dept-groups" class="mdb-select md-outline md-form bg-form" multiple>
+                    <option value="" disabled {% if slctd_groups_cnt == 0 %} selected {%endif%}>Выберите группы департамента</option>
+                    {% for group in groups %}
+                        <option value="{{group['g_id']}}" {% if group['selected'] == true %} selected {%endif%}>{{group['word_custom']}}</option>
+                    {% endfor %}
+                </select>
+                <select id="dept-supervisor-group" class="mdb-select md-outline md-form bg-form">
+                    <option value="" disabled selected>Выберите группу супервайзера</option>
+                    {% for group in groups %}
+                        <option value="{{group['g_id']}}" {% if department.supervisor_group == group['g_id'] %} selected {%endif%}>{{group['word_custom']}}</option>
+                    {% endfor %}
+                </select>
+                <select id="dept-training" class="mdb-select md-outline md-form bg-form">
+                    <option value="" disabled>Выберите поле тренировки</option>
+                    {% for field in fields %}
+                        <option value="field_{{field['pf_id']}}" {% if field['pf_id'] == training_field %} selected {%endif%}>{{field['word_custom']}}</option>
+                    {% endfor %}
+                </select>
+                <select id="dept-type" class="mdb-select md-outline md-form bg-form">
+                    {% for id, dept in types %}
+                        {% if id != 0 %}
+                        <option value="{{id}}" {% if department['type'] == id %} selected {% endif %}>{{dept['name']}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <input type="button" data-dept-id="{{department.id}}" data-action="save" class="btn btn-lg btn-flat" value="Сохранить">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/admin/departments/edit.js?ver={{version}}"></script>
+{% endblock %}

@@ -1,0 +1,286 @@
+{% extends "_components/layouts/layout-main.twig" %}
+
+{% block title %}Computer Aided Dispatch{% endblock %}
+
+{% block content %}
+
+<input type="hidden" id="currentTemplate" value="cad">
+
+<div class="row d-flex flex-md-row-reverse">
+    <div class="mt-2 col-12 col-md-4">
+    
+        <div class="bg-main rounded p-3 mb-5">
+
+            <div class="row">
+                <div class="col-lg-7 col-12">
+                    <h4><i class="fas fa-user"></i> Привет, {{user['name']|split(' ')|last}}</h4>
+                    <l><i class="fas fa-id-badge"></i> {{(forum_user['member_title']|length > 0) ? forum_user['member_title'] : "N/A"}}, {{user['name']|split(' ')|last}}</l><br>
+                    <div id="displist" class="mt-1">
+                        <l><i class="fas fa-headset"></i> ACT: NONE</l><br>
+                        <l><i class="fas fa-car"></i> TRF: NONE</l><br>
+                        <l><i class="fas fa-phone-volume"></i> OPR: NONE</l>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-12 d-flex flex-column">
+                    {% include "_components/buttons/button-sto.twig" %}
+                    {% include "_components/buttons/button-panic.twig" %}
+                    {% include "_components/buttons/button-priority.twig" %}
+                </div>
+            </div>
+
+            {% include "_components/status_disp.twig" %}
+
+            <hr>
+
+            <div>
+                <a class="mb-0 h5" data-toggle="collapse" data-target="#dbsearch__collapse" aria-expanded="false" aria-controls="dbsearch__collapse">Поиск по базе <i class="fas fa-search"></i></a>
+                <div class="mt-2 collapse show" id="dbsearch__collapse">
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" id="dbsearch__query" class="form-control bg-form m-0" placeholder="Запрос">
+                        </div>
+                        <div class="col-6">
+                            <select class="border-0 mdb-select md-outline md-form m-0 ml-2 elevation--z4 rounded" id="dbsearch__type">
+                                <option value="NCIC">NCIC</option>
+                                <option value="DMV">DMV</option>
+                                <option value="FLD">FLD</option>
+                            </select>
+                        </div>
+                        <div class="mt-2 col-12">
+                            <button id="dbsearch__button" class="btn btn-primary btn-block m-0 mb-2">ПОИСК <i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <a class="mb-0 h5" data-toggle="collapse" data-target="#tools__collapse" aria-expanded="false" aria-controls="tools__collapse">Инструменты <i class="fas fa-tools"></i></a>
+            <div class="mt-2 collapse show" id="tools__collapse">
+                <div class="row">
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <button data-toggle="modal" data-target="#boloPersonNewModal" class="btn btn-dark bg-cst-gray btn-block">ADD BOLO-PERSON</button>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <button data-toggle="modal" data-target="#boloVehicleNewModal" class="btn btn-dark bg-cst-gray btn-block">ADD BOLO-VEHICLE</button>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <a role="button" target="_blank" href="https://southlandproject.ru/penalcode/" class="btn btn-dark bg-cst-gray btn-block">PENAL&VEHICLE CODE</a>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <a role="button" target="_blank" href="https://southlandproject.ru/%D0%BA%D0%BE%D0%B4%D1%8B/" class="btn btn-dark bg-cst-gray btn-block">TEN CODES</a>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <button data-toggle="modal" data-target="#warrantNewModal" class="btn btn-dark bg-cst-gray btn-block">NEW WARRANT</button>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <button class="btn btn-dark bg-cst-gray btn-block" onclick="showWarrantList()">LIST OF WARRANTS</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr>
+
+            <div>
+                <a class="mb-0 h5" data-toggle="collapse" data-target="#notebook__collapse" aria-expanded="false" aria-controls="notebook__collapse">Блокнот <i class="fas fa-clipboard"></i></a>
+                <div class="mt-2 collapse show" id="notebook__collapse">
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark" id="notebook__text" rows="4">{{user['notebook']}}</textarea>
+                </div>
+            </div>
+
+            <hr>
+
+            <a class="mb-0 h5" data-toggle="collapse" data-target="#disp-gamezone__collapse" aria-expanded="false" aria-controls="disp-gamezone__collapse">Изменение игровой зоны <i class="fas fa-map"></i></a>
+            <div class="mt-2 collapse" id="disp-gamezone__collapse">
+                <div class="input-group">
+                    <input type="text" id="disp-gamezone" class="form-control bg-form m-0" placeholder="Игровая зона">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-md m-0" type="button" data-action="gz-save">Изменить</button>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <div class="mt-2 col-12 col-md-8">
+
+        <a class="mb-0 h5" data-toggle="collapse" data-target="#newsit-disp-form" aria-expanded="false" aria-controls="newsit-disp-form">Создание ситуации <i class="fas fa-plus"></i></a>
+        <form class="mt-2 collapse show" id="newsit-disp-form">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="md-form m-0">
+                        <input type="text" id="newsit-street" class="form-control enable-border">
+                        <label for="newsit-street">Улица</label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="md-form m-0">
+                        <input type="text" id="newsit-intersected-street" class="form-control enable-border">
+                        <label for="newsit-intersected-street">Пересечение с улицой</label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="md-form m-0 mt-1">
+                        <input type="text" id="newsit-block" class="form-control enable-border">
+                        <label for="newsit-block">Ближайший блок</label>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="md-form m-0 mt-1">
+                        <input type="text" id="newsit-type" class="form-control enable-border">
+                        <label for="newsit-type">Тип ситуации</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mt-2 md-form mb-0">
+                        <textarea class="form-control md-textarea bg-transparent enable-border" id="newsit-desc" rows="2" placeholder="Описание"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button data-action="create-new-situation" class="btn btn-block btn-primary mt-3">Создать</button>
+        </form>
+        
+        <div class="mt-2 py-2 rounded">
+            <a class="mt-1 mb-0 h5" data-toggle="collapse" data-target="#situations__collapse" aria-expanded="false" aria-controls="situations__collapse">Все вызовы <i class="fas fa-arrow-down"></i></a>
+            <div class="mt-2 collapse show text-center" id="situations__collapse">
+                {% include "_components/situations.twig" %}
+            </div>
+        </div>
+        <div class="mt-2 py-2 rounded">
+            <a class="mt-1 mb-0 h5" data-toggle="collapse" data-target="#bolo__collapse" aria-expanded="false" aria-controls="bolo__collapse">BOLO <i class="fas fa-arrow-down"></i></a>
+            <div class="mt-2 collapse show text-center" id="bolo__collapse">
+                {% include "_components/bolo.twig" %}
+            </div>
+        </div>
+        <div class="mt-2 py-2 rounded">
+            <a class="mt-1 mb-0 h5" data-toggle="collapse" data-target="#units__collapse" aria-expanded="false" aria-controls="units__collapse">Юниты <i class="fas fa-arrow-down"></i></a>
+            <div class="mt-2 collapse show text-center" id="units__collapse">
+                {% include "_components/units.twig" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="attachSitModal" tabindex="-1" role="dialog" name="attachSitModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-header">
+        <h5 class="modal-title">Прикрепление к ситуации</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="newweapon-form">
+        <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-2" id="newweapon-char">
+            <option value="-1" selected disabled>Персонаж</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-flat btn-block elevation--z1" data-action="create-new-weapon">Прикрепить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ncicModal" tabindex="-1" role="dialog" name="ncicModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="dmvModal" tabindex="-1" role="dialog" name="dmvModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="fldModal" tabindex="-1" role="dialog" name="fldModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="sitAttachModal" tabindex="-1" role="dialog" name="attachModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="sitInfoModal" tabindex="-1" role="dialog" name="commentsModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div class="modal fade" id="orderListModal" tabindex="-1" role="dialog" name="orderListModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="warrantNewModal" tabindex="-1" role="dialog" name="warrantNewModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-body" id="neworder-form">
+        <div class="text-center font-weight-bold"><h3 >US WARRANT SERVICE</h3></div> 
+        <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-4" id="neworder-type">
+            <option value="-1" selected disabled>Выберите предмет ордера</option>
+            <option value="1">Арест</option>
+            <option value="2">Обыск</option>
+        </select>
+        <input type="text" id="neworder-name" class="form-control bg-form mt-3" placeholder="Объект ордера">
+        <div class="text-center grey-text"><l >Имя и Фамилия при аресте, адрес при обыске</l></div> 
+        <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-3" id="neworder-desc" rows="4" placeholder="Описание ордера"></textarea>
+        <input type="text" id="neworder-by" class="form-control bg-form mt-3" placeholder="Кем будет выдан">
+        <input type="text" id="neworder-date" class="form-control bg-form mt-3" placeholder="Дата выдачи (дд/мм/ГГГГ)">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-block elevation--z1" data-action="create-new-order">Выписать <i class="fas fa-scroll"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="boloPersonNewModal" tabindex="-1" role="dialog" name="boloPersonNewModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-body" id="newbp-form">
+        <div class="text-center font-weight-bold"><h3>BOLO PERSON</h3></div> 
+        <input type="text" id="newbp-target" class="form-control bg-form mt-3" placeholder="Имя и/или Фамилия (если известно)">
+        <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-3" id="newbp-desc" rows="5" placeholder="Описание (особые приметы, цвет кожи/глаз/волос, примерный рост/вес)"></textarea>
+        <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-3" id="newbp-reason" rows="3" placeholder="Причина розыска"></textarea>
+        <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-3" id="newbp-lastlocation" rows="3" placeholder="Последняя локация"></textarea>
+        <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-3" id="newbp-priority">
+            <option value="-1" selected disabled>Выберите приоритет</option>
+            <option value="1">Низкий</option>
+            <option value="2">Средний</option>
+            <option value="3">Высокий</option>
+        </select>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-block elevation--z1" data-action="create-new-bp">Создать <i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="newCitationModal" tabindex="-1" role="dialog" name="newCitationModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="newArrestModal" tabindex="-1" role="dialog" name="newArrestModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div class="modal fade" id="boloVehicleNewModal" tabindex="-1" role="dialog" name="boloVehicleNewModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-body" id="newvp-form">
+        <div class="text-center font-weight-bold"><h3>BOLO VEHICLE</h3></div> 
+        <input type="text" id="newvp-target" class="form-control bg-form mt-3" placeholder="Марка и модель">
+        <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-3" id="newvp-desc" rows="5" placeholder="Описание (особые приметы, цвет, диски, повреждения)"></textarea>
+        <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-3" id="newvp-reason" rows="3" placeholder="Причина розыска"></textarea>
+        <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-3" id="newvp-lastlocation" rows="3" placeholder="Последняя локация"></textarea>
+        <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-3" id="newvp-priority">
+            <option value="-1" selected disabled>Выберите приоритет</option>
+            <option value="1">Низкий</option>
+            <option value="2">Средний</option>
+            <option value="3">Высокий</option>
+        </select>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-block elevation--z1" data-action="create-new-vp">Создать <i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/cad.js?ver={{version}}"></script>
+
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/priority-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/100-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/panic-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/gamezone.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/time.js?ver={{version}}"></script>
+{% endblock %}

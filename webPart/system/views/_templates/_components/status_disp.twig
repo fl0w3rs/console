@@ -1,0 +1,6 @@
+<div id="disp-status-buttons" class="d-flex flex-column flex-xl-row mt-2">
+    <button onclick="playClick(); sendWebsocket('update-disp-status', {status: -1})"  class="btn {{ avail == null ? 'btn-dark-green' : 'btn-dark bg-cst-gray' }} btn-lg btn-block mx-xl-2">OFF</button>
+    <button onclick="playClick(); sendWebsocket('update-disp-status', {status: 1})"  class="btn {{ avail.status == 1 ? 'btn-dark-green' : 'btn-dark bg-cst-gray' }} btn-lg btn-block mx-xl-2">ACT</button>
+    <button onclick="playClick(); sendWebsocket('update-disp-status', {status: 2})" class="btn {{ avail.status == 2 ? 'btn-dark-green' : 'btn-dark bg-cst-gray' }} btn-lg btn-block mx-xl-2">TRF</button>
+    <button onclick="playClick(); sendWebsocket('update-disp-status', {status: 3})"  class="btn {{ avail.status == 3 ? 'btn-dark-green' : 'btn-dark bg-cst-gray' }} btn-lg btn-block mx-xl-2">OPR</button>
+</div>

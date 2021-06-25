@@ -1,0 +1,67 @@
+{% extends "_components/layouts/layout-main.twig" %}
+
+{% block title %}Fire{% endblock %}
+
+{% block content %}
+
+<input type="hidden" id="currentTemplate" value="fire">
+
+<div class="row">
+
+    <div class="mt-2 col-12 col-md-4">
+    
+        <div class="bg-main rounded p-3 mb-5">
+
+            <div class="row">
+                <div class="col-12 col-lg-7">
+                    <h4><i class="fas fa-user"></i> Привет, {{user['name']|split(' ')|last}}</h4>
+                    <l><i class="fas fa-id-badge"></i> {{(forum_user['member_title']|length > 0) ? forum_user['member_title'] : "N/A"}}, {{user['name']|split(' ')|last}}</l><br>
+                    <div id="displist" class="mt-1">
+                        <l><i class="fas fa-headset"></i> ACT: NONE</l><br>
+                        <l><i class="fas fa-car"></i> TRF: NONE</l><br>
+                        <l><i class="fas fa-phone-volume"></i> OPR: NONE</l>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-5 d-flex flex-column">
+                    {% include "_components/buttons/button-sto.twig" %}
+                    {% include "_components/buttons/button-panic.twig" %}
+                    {% include "_components/buttons/button-priority.twig" %}
+                    
+                </div>
+            </div>
+
+            {% include "_components/status.twig" %}
+
+            <hr>
+
+            <a class="mb-0 h5" class="mb-0" data-toggle="collapse" data-target="#notebook__collapse" aria-expanded="false" aria-controls="notebook__collapse">Блокнот <i class="fas fa-clipboard"></i></a>
+            <div class="mt-2 collapse show" id="notebook__collapse">
+                <textarea class="form-control bg-form rounded scrollbar scrollbar-dark" id="notebook__text" rows="4">{{user['notebook']}}</textarea>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <div class="mt-2 col-12 col-md-8">
+        <div class="mt-2 py-2 rounded">
+            <a class="mt-1 mb-0 h5" data-toggle="collapse" data-target="#situations__collapse" aria-expanded="false" aria-controls="situations__collapse">Все вызовы <i class="fas fa-arrow-down"></i></a>
+            <div class="mt-2 collapse show text-center" id="situations__collapse">
+                {% include "_components/situations.twig" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sitInfoModal" tabindex="-1" role="dialog" name="commentsModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/priority-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/100-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/panic-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/unit-attach.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/gamezone.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/time.js?ver={{version}}"></script>
+{% endblock %}

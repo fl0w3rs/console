@@ -1,0 +1,54 @@
+<table class="table btn-table table-striped table-dark text-white bg-main border-top-0 rounded table-responsive-sm" id="units-table">
+    <thead>
+        <tr>
+            <th>Статус</th>
+            <th>Юнит</th>
+            <th>Занятость</th>
+            <th>Изменение статуса</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key, unit in units %}
+        <tr data-unit-id="{{unit.uid}}">
+            <td>
+                {% if unit['status'] == 1 %}
+                <div class="text-success">AVAIL</div>
+                {% elseif unit['status'] == 2 %}
+                <div class="text-danger">UNAVAIL</div>
+                {% elseif unit['status'] == 3 %}
+                <div class="text-warning">BUSY</div>
+                {% endif %}{#BCSO SDBI BLS#}
+            </td>
+            <td>{{units_char[key]['name']}}</td>
+            <td>
+                {% if units_calls[key]|length > 0 %}
+                    {% for id, call in units_calls[key] %}
+                        {{call['id']}}
+                        <a class="mr-1" onclick="sendWebsocket('detach-from-situation', {sitid: {{call['id']}}, uid: {{unit.uid}}})"><i class="fa fa-times text-danger" aria-hidden="true"></i></a>
+                    {% endfor %}
+                {% else %}
+                    Не прикреплён
+                {% endif %}
+            </td>
+            <td>
+                {% if unit['status'] != 1 %}
+                <a class="text-success my-2" onclick="sendWebsocket('change-unit-status', {id: {{unit['uid']}}, status: 1})">AVAIL</a>
+                {% endif %}
+
+                {% if unit['status'] != 2 %}
+                <a class="text-danger my-2" onclick="sendWebsocket('change-unit-status', {id: {{unit['uid']}}, status: 2})">UNAVAIL</a>
+                {% endif %}
+
+                {% if unit['status'] != 3 %}
+                <a class="text-warning my-2" onclick="sendWebsocket('change-unit-status', {id: {{unit['uid']}}, status: 3})">BUSY</a>
+                {% endif %}
+
+                {# 1-avail 2-unavail 3-busy #}
+                {# <a class="text-success my-2" onclick="sendWebsocket('change-unit-status', {id: {{unit['id']}}, status: 1})">AVAIL</a>
+                <a class="text-danger my-2" onclick="sendWebsocket('change-unit-status', {id: {{unit['id']}}, status: 2})">UNAVAIL</a>
+                <a class="text-warning my-2" onclick="sendWebsocket('change-unit-status', {id: {{unit['id']}}, status: 3})">BUSY</a> #}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

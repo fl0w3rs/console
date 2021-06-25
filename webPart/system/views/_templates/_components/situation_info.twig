@@ -1,0 +1,71 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header">
+            <h5 class="modal-title">Ситуация {{situation.display_title}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="grey-text p-2">
+                <span>Описание вызова</span>
+                <div class="p-2 elevation--z4 rounded font-hack mb-1">
+                    {{situation.description}}
+                </div>
+                <span>Инициатор</span>
+                <div class="p-2 elevation--z4 rounded font-hack mb-1">
+                    {{situation.issuer_name}}
+                </div>
+                <span>Улица</span>
+                <div class="p-2 elevation--z4 rounded font-hack mb-1">
+                    {{situation.street}}
+                </div>
+                {% if situation.block|length > 0 %} 
+                    <span>Блок</span>
+                    <div class="p-2 elevation--z4 rounded font-hack mb-1">
+                        {{situation.block}}
+                    </div>
+                {% endif %}
+                {% if situation.intersected_street|length > 0 %}
+                    <span>Пересечённая улица</span>
+                    <div class="p-2 elevation--z4 rounded font-hack mb-1">
+                        {{situation.intersected_street}}
+                    </div>
+                {% endif %}
+                
+                <span>Прикреплённые юниты</span>
+                <div class="p-2 elevation--z4 rounded font-hack mb-1">
+                {% if attached_units|length > 0 %}
+                    {% for u_k, user in attached_units %}
+                        <span class="{{ user['unit'].arrived == 0 ? 'amber-text' : 'text-success' }}">{{user.name}}</span>{% if department_type == 2 %}<a class="ml-1" onclick="sendWebsocket('detach-from-situation', {sitid: {{situation['id']}}, uid: {{user.id}}})"><i class="fa fa-times text-danger" aria-hidden="true"></i></a>{% else %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    Нет
+                {% endif %}
+                </div>
+            </div>
+
+            <hr/>
+
+            <table class="table btn-table table-striped table-borderless text-white elevation--z1 rounded">
+                <tbody>
+                    {% for log in logs %}
+                        <tr class="grey-text">
+                            <td>{{log.time}} {% if log.is_auto == 1 %}<span class="badge badge-dark">AUTO</span>{%endif%}</td>
+                            <td>{{log.creator_name}}</td>
+                            <td>{{log.message|e}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="input-group mt-2">
+                <input type="text" id="sitinfo-message" class="form-control bg-form m-0" placeholder="Сообщение">
+                <div class="input-group-append">
+                    <button class="btn btn-md btn-danger m-0 px-3 py-2 z-depth-0 waves-effect" onclick="sendSituationMessage({{situation.id}}, '#sitinfo-message')" type="button"><i class="fa fa-paper-plane" aria-hidden="true"></i> Отправить</button>
+                </div>
+            </div>
+            {# fff #}
+        </div>
+    </div>
+</div>

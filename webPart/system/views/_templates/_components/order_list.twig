@@ -1,0 +1,67 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header">
+            <h5 class="modal-title">Список ордеров</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            {% for order in warrants %}
+            <div class="px-4 py-3 my-2 bg-light text-dark rounded position-relative w-100">
+                {% if order.status == 2 or order.status == 3 %}
+                    <div class="position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                        <img height="128" src="{{config['dir_prefix']}}assets/images/{{order.status == 2 ? 'warrant__executed' : 'warrant__cancelled'}}.png">
+                    </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-7">
+                        ОРДЕР #{{order.id}} НА {{order.type == 1 ? 'АРЕСТ' : order.type == 2 ? 'ОБЫСК' : '{!неизвестно!}'}}<br>
+                        ОБЪЕКТ: {{order.name}}<br>
+                    </div>
+                    <div class="col-5 text-right">
+                        <img src="{{config['dir_prefix']}}assets/images/warrant__emblem.png" height="96">
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    ОПИСАНИЕ:<br>
+                    <div class="font-hack">
+                        {{order.description}}
+                    </div>
+                    <div class="font-hack mt-4">
+                        {{order.additional|raw}}
+                    </div>
+                </div>
+                <div class="mt-4 row">
+                    <div class="col-4 text-left">
+                        {% if order.status == 1 or order.status == 2 %}
+                        <img src="{{config['dir_prefix']}}assets/images/signature.png" height="64"><br/>
+                        {% endif %}
+                    </div>
+                    <div class="col-8 text-right">
+                        {{order.issued_by}}<br>
+                        {{order.date}}
+                    </div>
+                </div>
+                {% if order.status == 0 and is_admin %}
+                    <hr>
+                    <div class="btn-group btn-block">
+                        <button class="btn btn-sm btn-flat" onclick="signWarrant({{order.id}})">ПОДПИСАТЬ</button>
+                        <button class="btn btn-sm btn-flat" onclick="cancelWarrant({{order.id}})">АННУЛИРОВАТЬ</button>
+                    </div>
+                {% elseif order.status == 1 %}
+                    <hr>
+                    <div class="btn-group btn-block">
+                        <button class="btn btn-sm btn-flat" onclick="executeWarrant({{order.id}})">ОТМЕТИТЬ ИСПОЛНЕННЫМ</button>
+                    </div>
+                {% elseif (order.status == 2 or order.status == 3) and is_admin %}
+                    <hr>
+                    <div class="btn-group btn-block">
+                        <button class="btn btn-sm btn-flat" onclick="deleteWarrant({{order.id}})">УДАЛИТЬ ОРДЕР ИЗ БАЗЫ</button>
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

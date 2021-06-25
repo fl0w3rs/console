@@ -1,0 +1,58 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header text-center position-relative">
+            <div class="position-absolute"><a onclick="ncicSearch('{{character['ssn']}}')"><i class="fas fa-chevron-left"></i></a></div>
+            <h5 class="modal-title mx-auto">АРЕСТ</h5>
+        </div>
+        <div class="modal-body" id="newarrest-form">
+            <div class="row">
+                <div class="col-12 col-md-6 mt-1">
+                    <small class="form-text text-muted">Имя и Фамилия</small>
+                    <input type="text" class="form-control bg-form mt-1" value="{{character['name']}}" disabled>
+                </div>
+                <div class="col-12 col-md-6 mt-1">
+                    <small class="form-text text-muted">DOB</small>
+                    <input type="text" class="form-control bg-form mt-1" value="{{character['birth']}}" disabled>
+                </div>
+                <div class="col-12 mt-1">
+                    <small class="form-text text-muted">Адрес проживания</small>
+                    <input type="text" class="form-control bg-form mt-1" value="{{character['address']}}" disabled>
+                </div>
+                <div class="col-12 col-md-6 mt-1">
+                    <small class="form-text text-muted">Дата ареста</small>
+                    <input type="text" class="form-control bg-form mt-1" value="{{time|date('d/m/Y', 'Europe/Moscow')}}" disabled>
+                </div>
+                <div class="col-12 col-md-6 mt-1">
+                    <small class="form-text text-muted">Время ареста</small>
+                    <input type="time" id="newarrest-time" class="form-control bg-form mt-1" value="{{time|date('H:i', 'Europe/Moscow')}}">
+                </div>
+                <div class="col-12 mt-1">
+                    <small class="form-text text-muted">Место ареста</small>
+                    <input type="text" id="newarrest-location" class="form-control bg-form mt-1">
+                </div>
+                <div class="col-12 mt-3">
+                    <small class="form-text text-muted">Нарушения</small>
+                    <select id="newarrest-reasons" class="mt-1 border-0 elevation--z1 text-light scrollbar scrollbar-dark custom-select" size="8" multiple>
+                        {% for k, v in arrest_reasons %}
+                            <option value="{{k}}">{{v}}</option>
+                        {% endfor %}
+                    </select>
+                    {# <select id="newarrest-reasons" class="border-0 mdb-select md-outline md-form m-0 mt-1 elevation--z4 rounded" multiple searchable="Поиск">
+                        <option value="" disabled selected>Выберите нарушения</option>
+                        {% for k, v in citation_reasons %}
+                            <option value="{{k}}">{{v}}</option>
+                        {% endfor %}
+                    </select> #}
+                </div>
+                <input type="hidden" id="charid" value="{{character.id}}">
+                <div class="col-12 mt-3">
+                    <small class="form-text text-muted">Детали</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="newarrest-details" rows="4"></textarea>
+                </div>
+            </div>
+                <hr>
+                <button class="btn btn-block btn-primary" onclick="makeArrest('{{character.ssn}}')">Выдать</button>
+
+        </div>
+    </div>
+</div>

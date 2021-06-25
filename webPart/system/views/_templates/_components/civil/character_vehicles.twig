@@ -1,0 +1,53 @@
+{# <table class="table btn-table table-striped table-dark text-white bg-main rounded" id="vehicles-table">
+    <thead>
+        <tr>
+            <th>Персонаж</th>
+            <th>Марка и модель</th>
+            <th>VIN</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for char_key, char_value in characters %}
+            {% for veh in characters_vehicles[char_key] %}
+            <tr>
+                <td>{{char_value.name}}</td>
+                <td>{{veh.mark}} {{veh.model}}</td>
+                <td>{{veh.vin}}</td>
+                <td>
+                    <button class="btn btn-rounded btn-flat btn-sm m-0" type="button" onclick="deleteVehicle({{veh.id}})">
+                        Удалить
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table> #}
+
+<div class="row text-center" id="vehicles-table">
+    {% for char_key, char_value in characters %}
+        {% for veh in characters_vehicles[char_key] %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 my-2 text-break">
+                <div class="text-center position-relative">
+                    <div class="position-absolute" style="right: 4px; top: -2px;">
+                        {# <a onclick="editVehicle({{veh.id}})"><i class="fas fa-pencil-alt mx-1 my-2"></i></a> #}
+                        <a onclick="deleteVehicle({{veh.id}})"><i class="fas fa-times text-light"></i></a>
+                    </div>
+
+                    <div class="bg-primary text-light py-2">STATE OF SAN ANDREAS</div>
+                    <div class="bg-light text-primary py-2"><h1 class="font-weight-bold mb-0">{{veh.plate}}</h1><span class="grey-text">{{veh.mark}} {{veh.model}}</span></div>
+
+                </div>
+                {# <div class="bg-main py-3 px-2 d-flex flex-column position-relative" style="border-radius: 15px;">
+                    <div class="position-absolute" style="right: 8px; top: 0px;">
+                        <a onclick="deleteVehicle({{veh.id}})"><i class="fas fa-times text-light"></i></a>
+                    </div>
+                    <span class="font-weight-bold h4">{{veh.mark}} {{veh.model}}</span>
+                    <span>{{veh.vin}}</span>
+                    <span class="grey-text">{{char_value.name}}</span>
+                </div> #}
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>

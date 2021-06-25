@@ -1,0 +1,23 @@
+{% extends "_components/layouts/layout.twig" %}
+
+{% block title %}Авторизация{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center h-100">
+    <div class="col-12">
+        <div class="flex-center flex-column">
+            <img class="login-brand-logo animated fadeInDown" src="{{config['dir_prefix']}}assets/images/logo.png">
+            <div class="card col-12 col-md-6 col-lg-3 elevation--z2 rounded">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Авторизация</h5>
+                    <div class="card-text blink-animation" id="auth-status"><h5>Загружаем...</h5></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/login.js?ver={{version}}"></script>
+{% endblock %}

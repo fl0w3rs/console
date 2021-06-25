@@ -1,0 +1,16 @@
+{
+  "name": "cad-ws",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "fl0w3rs",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.32",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5",
+    "validatorjs": "^3.22.1",
+    "ws": "^7.4.0"
+  }
+}

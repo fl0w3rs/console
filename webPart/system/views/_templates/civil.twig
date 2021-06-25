@@ -1,0 +1,225 @@
+{% extends "_components/layouts/layout-main.twig" %}
+
+{% block title %}Civil{% endblock %}
+
+{% block content %}
+
+<input type="hidden" id="currentTemplate" value="civil">
+
+<div class="row">
+    <div class="mt-2 col-12 col-md-4">
+      <div class="bg-main rounded p-3 mb-5">
+
+            <div class="row">
+                <div class="col-lg-7 col-12">
+                    <h4><i class="fas fa-user"></i> Привет, {{user['name']|split(' ')|last}}</h4>
+                    <l><i class="fas fa-id-badge"></i> {{(forum_user['member_title']|length > 0) ? forum_user['member_title'] : "N/A"}}, {{user['name']|split(' ')|last}}</l><br>
+                    <div id="displist" class="mt-1">
+                        <l><i class="fas fa-headset"></i> ACT: NONE</l><br>
+                        <l><i class="fas fa-car"></i> TRF: NONE</l><br>
+                        <l><i class="fas fa-phone-volume"></i> OPR: NONE</l>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-12 d-flex flex-column">
+                    {% include "_components/buttons/button-sto.twig" %}
+                </div>
+            </div>
+
+            <hr>
+
+            <a class="mb-0 h5" data-toggle="collapse" data-target="#create__collapse" aria-expanded="false" aria-controls="create__collapse">Создание <i class="fas fa-plus"></i></a>
+            <div class="mt-2 collapse show" id="create__collapse">
+              <button data-toggle="modal" data-target="#createCharModal" class="btn btn-md btn-dark bg-cst-gray z-depth-0 btn-block">ПЕРСОНАЖ</button>
+              <button data-toggle="modal" data-target="#createWeaponModal" class="btn btn-md btn-dark bg-cst-gray z-depth-0 btn-block mt-1">ОРУЖИЕ</button>
+              <button data-toggle="modal" data-target="#createVehModal" class="btn btn-md btn-dark bg-cst-gray z-depth-0 btn-block mt-1">ТРАНСПОРТ</button>
+            </div>
+
+            <hr>
+
+            <a class="mb-0 h5" data-toggle="collapse" data-target="#newcall-form" aria-expanded="false" aria-controls="newcall-form">Вызов 911 <i class="fas fa-phone"></i></a>
+            <form class="mt-2 collapse show" id="newcall-form">
+              <div class="row">
+                <div class="col-lg-6 col-12">
+                  <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-2" id="newcall-char">
+                      <option value="-1" selected>Очевидец</option>
+                  </select>
+                  <input type="text" id="newcall-street" class="form-control bg-form mt-2" placeholder="Улица">
+                </div>
+                <div class="col-lg-6 col-12">
+                  <input type="text" id="newcall-intercepted-street" class="form-control bg-form mt-2" placeholder="Пересечение с улицой">
+                  <input type="text" id="newcall-block" class="form-control bg-form mt-2" placeholder="Ближайший блок">
+                </div>
+              </div>
+              <div class="mt-2 mb-3">
+                  <textarea class="form-control bg-form rounded scrollbar scrollbar-dark" id="newcall-desc" rows="2" placeholder="Описание"></textarea>
+              </div>
+              <button data-action="create-new-call" class="btn btn-md btn-primary btn-block">Создать</button>
+            </form>
+
+            
+        </div>
+    </div>
+    
+    <div class="mt-2 col-12 col-md-8 d-flex flex-column">
+      
+      <a class="mb-0 h5" data-toggle="collapse" data-target="#chars__collapse" aria-expanded="false" aria-controls="chars__collapse">Персонажи <i class="fas fa-arrow-down"></i></a>
+      <div class="collapse show" id="chars__collapse">
+        {% include "_components/civil/characters.twig" %}
+      </div>
+
+      <a class="mt-2 mb-0 h5" data-toggle="collapse" data-target="#weapons__collapse" aria-expanded="false" aria-controls="weapons__collapse">Оружие <i class="fas fa-arrow-down"></i></a>
+      <div class="collapse show" id="weapons__collapse">
+        {% include "_components/civil/character_weapons.twig" %}
+      </div>
+
+      <a class="mt-2 mb-0 h5" data-toggle="collapse" data-target="#vehicles__collapse" aria-expanded="false" aria-controls="vehicles__collapse">Машины <i class="fas fa-arrow-down"></i></a>
+      <div class="collapse show" id="vehicles__collapse">
+        {% include "_components/civil/character_vehicles.twig" %}
+      </div>
+
+      <a class="mt-2 mb-0 h5" data-toggle="collapse" data-target="#citations__collapse" aria-expanded="false" aria-controls="citations__collapse">Штрафы <i class="fas fa-arrow-down"></i></a>
+      <div class="collapse show" id="citations__collapse">
+        {% include "_components/civil/character_citations.twig" %}
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createCharModal" tabindex="-1" role="dialog" name="createCharModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-header">
+        <h5 class="modal-title">Создание персонажа</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="newchar-form">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input border-0" accept="image/*" id="newchar-photo">
+          <label class="custom-file-label" for="newchar-photo">Фотография персонажа (соотношение 1:1)</label>
+        </div>
+        
+        <div class="py-2 px-3 mt-2" style="border-radius: 15px; background-color: #DFD8CB">
+          <span class="text-center"><h4 class="font-weight-bold mb-2 text-dark">STATE OF SAN ANDREAS IDCARD</h4></span>
+          <input type="text" id="newchar-name" class="form-control bg-form form-dark" placeholder="Имя и Фамилия">
+          <input type="text" id="newchar-birth" class="form-control bg-form form-dark mt-2" placeholder="Дата рождения (ДД/ММ/ГГГГ)">
+          <select class="mdb-select md-outline md-form form-dark my-0 mt-2" id="newchar-sex">
+              <option value="-1" selected disabled>Пол</option>
+              {% for key, value in sex_types %}
+                  <option value="{{key}}">{{value}}</option>
+              {% endfor %}
+          </select>
+          <select class="mdb-select md-outline md-form form-dark my-0 mt-2" id="newchar-race">
+              <option value="-1" selected disabled>Раса</option>
+              {% for key, value in races %}
+                  <option value="{{key}}">{{value}}</option>
+              {% endfor %}
+          </select>
+          <input type="text" id="newchar-work" class="form-control bg-form form-dark mt-2" placeholder="Работа">
+          <input type="text" id="newchar-address" class="form-control bg-form form-dark mt-2" placeholder="Адрес проживания">
+
+          <img class="w-100 mt-2" src="{{config['dir_prefix']}}assets/images/idcard__barcode.gif"></img>
+          
+        </div>
+
+        <div class="py-3 px-3 mt-2" style="border-radius: 15px; background-color: #37AFE2">
+          <span class="text-center"><h4 class="font-weight-bold mb-3">UNITED STATES MEDICAL CARD</h4></span>
+          <input type="text" id="newchar-med-diseases" class="form-control form-dark bg-form mt-2" placeholder="Болезни">
+          <input type="text" id="newchar-med-allergy" class="form-control form-dark bg-form mt-2" placeholder="Аллергии">
+          <input type="text" id="newchar-med-drugs" class="form-control form-dark bg-form mt-2" placeholder="Употребляемые препараты">
+          <input type="text" id="newchar-med-contact" class="form-control form-dark bg-form mt-2" placeholder="Контакт на случай ЧС">
+          <input type="text" id="newchar-med-weight" class="form-control form-dark bg-form mt-2" placeholder="Вес">
+          <input type="text" id="newchar-med-height" class="form-control form-dark bg-form mt-2" placeholder="Рост">
+
+          <div class="text-center mt-2 mb-1"><span style="font-size: 11px;">SAN ANDREAS MEDICAL CENTER</span></div>
+
+        </div>
+        
+        <div class="py-2 px-3 mt-2" style="border-radius: 15px; background-color: #DFD8CB">
+          <span class="text-center"><h4 class="font-weight-bold mb-2 text-dark">DRIVING LICENSE</h4></span>
+          <input type="text" class="form-control form-dark bg-form" placeholder="Имя и Фамилия">
+          <select class="mdb-select md-outline md-form form-dark elevation--z4 my-0 mt-2" id="newchar-driving-license">
+              <option value="-1" selected disabled>Лицензия на вождение</option>
+              {% for key, value in driving_license_types %}
+                  <option value="{{key}}">{{value}}</option>
+              {% endfor %}
+          </select>
+        </div>
+
+        <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-2" id="newchar-gun-license">
+            <option value="-1" selected disabled>Лицензия на оружие</option>
+            {% for key, value in gun_license_types %}
+                <option value="{{key}}">{{value}}</option>
+            {% endfor %}
+        </select>
+        <div class="mb-4 mt-2">
+            <textarea class="form-control bg-form rounded" id="newchar-desc" rows="3" placeholder="Описание персонажа (внешность, особые приметы)"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-flat btn-block elevation--z1" data-action="create-new-char">Создать</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createWeaponModal" tabindex="-1" role="dialog" name="createWeaponModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-header">
+        <h5 class="modal-title">Создание оружия</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="newweapon-form">
+        <input type="text" id="newweapon-model" class="form-control bg-form" placeholder="Модель">
+        <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-2" id="newweapon-char">
+            <option value="-1" selected disabled>Персонаж</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-flat btn-block elevation--z1" data-action="create-new-weapon">Создать</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createVehModal" tabindex="-1" role="dialog" name="createVehModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-header">
+        <h5 class="modal-title">Создание машины</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="newveh-form">
+        <input type="text" id="newveh-mark" class="form-control bg-form mt-2" placeholder="Марка">
+        <input type="text" id="newveh-model" class="form-control bg-form mt-2" placeholder="Модель">
+        <input type="text" id="newveh-plate" class="form-control bg-form mt-2" placeholder="Номер">
+        <input type="text" id="newveh-color" class="form-control bg-form mt-2" placeholder="Цвет">
+        <input type="text" id="newveh-desc" class="form-control bg-form mt-2" placeholder="Особые приметы">
+        <select class="mdb-select md-outline md-form elevation--z4 my-0 mt-2" id="newveh-char">
+            <option value="-1" selected disabled>Персонаж</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-flat btn-block elevation--z1" data-action="create-new-veh">Создать</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" name="editModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<input type="file" id="newCharPhotoFile" hidden />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/civil.js?ver={{version}}"></script>
+
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/100-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/gamezone.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/time.js?ver={{version}}"></script>
+{% endblock %}

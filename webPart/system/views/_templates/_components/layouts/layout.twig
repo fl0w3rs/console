@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %} — CONSOLE</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        {% include "_components/includes/css.twig" %}
+	</head>
+	<body>
+        {% include "_components/layouts/preloader.twig" %}
+
+        <div class="vh-100 container-fluid">
+            {% block content %}{% endblock %}
+        </div>
+
+        {% include "_components/includes/js.twig" %}
+
+        <script type="text/javascript" src="{{config['dir_prefix']}}assets/js/main.js?ver={{version}}"></script>
+
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

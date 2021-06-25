@@ -1,0 +1,72 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main text-light">
+        <div class="modal-header position-relative w-100 p-0">
+            <div class="position-absolute w-100 p-3">
+                <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
+                    <span class="text-light" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="mx-auto p-3">{{char.name}}</h5>
+        </div>
+        <div class="modal-body" id="ec-form">
+            <small class="text-muted">Имя</small>
+            <input type="text" id="ec-name" class="form-control bg-form" placeholder="Имя и Фамилия" value="{{char.name}}">
+            <small class="text-muted mt-2">Дата рождения (ДД/ММ/ГГГГ)</small>
+            <input type="text" id="ec-birth" class="form-control bg-form" placeholder="Дата рождения (ДД/ММ/ГГГГ)" value="{{char.birth}}">
+            <small class="text-muted mt-2">Пол</small>
+            <select class="mdb-select md-outline md-form my-0" id="ec-sex">
+                {% for key, value in sex_types %}
+                    <option value="{{key}}" {% if char.sex == key %}selected{% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+            <small class="text-muted mt-2">Раса</small>
+            <select class="mdb-select md-outline md-form my-0" id="ec-race">
+                {% for key, value in races %}
+                    <option value="{{key}}" {% if char.race == key %}selected{% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+            <small class="text-muted mt-2">Работа</small>
+            <input type="text" id="ec-work" class="form-control bg-form" placeholder="Работа" value="{{char.work}}">
+            
+            <small class="text-muted mt-2">Адрес проживания</small>
+            <input type="text" id="ec-address" class="form-control bg-form" placeholder="Адрес проживания" value="{{char.address}}">
+            
+
+            <small class="text-muted mt-2">Болезни</small>
+            <input type="text" id="ec-med-diseases" class="form-control bg-form" placeholder="Болезни" value="{{char.med_diseases}}">
+            <small class="text-muted mt-2">Аллергии</small>
+            <input type="text" id="ec-med-allergy" class="form-control bg-form" placeholder="Аллергии" value="{{char.med_allergy}}">
+            <small class="text-muted mt-2">Употребляемые препараты</small>
+            <input type="text" id="ec-med-drugs" class="form-control bg-form" placeholder="Употребляемые препараты" value="{{char.med_drugs}}">
+            <small class="text-muted mt-2">Контакт на случай ЧС</small>
+            <input type="text" id="ec-med-contact" class="form-control bg-form" placeholder="Контакт на случай ЧС" value="{{char.med_contact}}">
+            <small class="text-muted mt-2">Вес</small>
+            <input type="text" id="ec-med-weight" class="form-control bg-form" placeholder="Вес" value="{{char.med_weight}}">
+            <small class="text-muted mt-2">Рост</small>
+            <input type="text" id="ec-med-height" class="form-control bg-form" placeholder="Рост" value="{{char.med_height}}">
+
+            <small class="text-muted mt-2">Лицензия на вождение</small>
+            <select class="mdb-select md-outline md-form elevation--z4 my-0" id="ec-driving-license">
+                {% for key, value in driving_license_types %}
+                    <option value="{{key}}" {% if key == char.driving_license %}selected{% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+
+            <small class="text-muted mt-2">Лицензия на оружие</small>
+            <select class="mdb-select md-outline md-form elevation--z4 my-0" id="ec-gun-license">
+                {% for key, value in gun_license_types %}
+                    <option value="{{key}}" {% if key == char.gun_license %}selected{% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+            
+            <small class="text-muted mt-2">Описание персонажа (внешность, особые приметы)</small>
+            <div class="mb-4">
+                <textarea class="form-control bg-form rounded" id="ec-desc" rows="3" placeholder="Описание персонажа (внешность, особые приметы)">{{char.description}}</textarea>
+            </div>
+
+            <input type="hidden" id="ec-id" value="{{char.id}}">
+            
+            <button class="btn btn-primary btn-block" onclick="submitCharacterEdit()">Сохранить</button>
+        </div>
+    </div>
+</div>

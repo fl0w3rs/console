@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %} — CONSOLE</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        {% include "_components/includes/css.twig" %}
+
+        {% block styles %}{% endblock %}
+	</head>
+	<body class="scrollbar scrollbar-primary vh-100">
+        {% include "_components/layouts/preloader.twig" %}
+        <header id="header">
+
+            <nav class="navbar navbar-expand navbar-dark bg-main">
+                <div class="container-fluid position-relative">
+                    <a class="navbar-brand">
+                    {# <code>&gt; Console_</code> #}
+                        <img src="{{config['dir_prefix']}}assets/images/console__logo.png?1" alt="logo" height="30">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="position-absolute text-center w-100">
+                        <div id="gamezone"><i class="fas fa-location-arrow grey-text"></i> {{settings['gamezone']|e}}</div>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
+                            {% block navbar_right_buttons %}{% endblock %}
+                            <a id="mute-button" data-active="{{user['muted_buttons']}}" data-action="mute-buttons" class="{{ user['muted_buttons'] ? 'text-danger' : 'text-light' }} d-flex align-items-center rounded-pill"><i class="fas fa-volume-mute mx-2"></i></a>
+                            {% include "_components/profile-navbar.twig" %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+        </header>
+
+        {% block beforecontainer %}{% endblock %}
+        
+        <div id="main-content" class="container-fluid p-5">
+            {% block content %}{% endblock %}
+        </div>
+
+        
+        <div class="windows__downbar px-4 py-2 d-flex align-items-center shadow-lg">
+            <img class="windows__logo" src="{{config['dir_prefix']}}assets/images/windows__logo.png">
+            <div class="float-left ml-4">
+                <select class="border-0 mdb-select md-outline md-form m-0 ml-2 elevation--z4 rounded w-100 windows__deptselect" id="dept-select-navbar">
+                    <option value="0" {% if department == 0 %}selected{% endif %}>Рабочий стол</option>
+
+                    {% for dept in avail_departments %}
+                        <option value="{{dept.id}}" {% if department == dept.id %}selected{% endif %}>{{dept.name}}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            <div class="ml-auto text-center">
+                <span>
+                    <b id="time">11:11</b><br>
+                    <b id="date">11/11/1111</b>
+                </span>
+            </div>
+        </div>
+
+        {% include "_components/includes/js.twig" %}
+
+        <script type="text/javascript" src="{{config['dir_prefix']}}assets/js/main.js?ver={{version}}"></script>
+        <script type="text/javascript" src="{{config['dir_prefix']}}assets/js/navbar-departments.js?ver={{version}}"></script>
+
+        {% block scripts %}{% endblock %}
+        
+        <script type="text/javascript" src="{{config['dir_prefix']}}assets/js/websocket.js?ver={{version}}"></script>
+    </body>
+</html>

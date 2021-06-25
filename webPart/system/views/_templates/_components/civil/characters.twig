@@ -1,0 +1,46 @@
+{# <table class="table btn-table table-striped table-dark text-white bg-main rounded" id="chars-table">
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>SSN</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for char in characters %}
+            <tr data-char-id="{{char.id}}">
+                <td>{{char.name}}</td>
+                <td>{{char.ssn}}</td>
+                <td>
+                    <button class="btn btn-rounded btn-flat btn-sm m-0" type="button" onclick="deleteCharacter({{char.id}})">
+                        Удалить
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>  #}
+
+<div class="row text-center" id="chars-table">
+    {% for char in characters %}
+    <div class="col-md-4 col-sm-6 col-12 my-2 text-break">
+        <div class="py-4 px-2 position-relative bg-main text-light rounded" >
+            <div class="position-absolute" style="right: 8px; top: 0px;">
+                <a onclick="editCharacter({{char.id}})"><i class="fas fa-pencil-alt mx-1 my-2"></i></a>
+                <a onclick="deleteCharacter({{char.id}})"><i class="fas fa-times"></i></a>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-12">
+                    <a onclick="updateCharPhoto({{char.id}})"><img src="{% if char.image|length > 1 %}{{config['dir_prefix']}}uploads/avatars/{{char.image}}{% else %}http://placehold.it/75x75{% endif %}" width="75" height="75"></a>
+                </div>
+                <div class="col-lg-8 col-12 d-flex flex-column text-left">
+                    <span class="font-weight-bold h5 m-0">{{char.name}}</span>
+                    <span class="text-muted mt-1">{{char.birth}}</span>
+                    <span>{{char.address}}</span>
+                    <span class="text-muted">{{char.ssn}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
