@@ -1,0 +1,79 @@
+{# <table class="table btn-table table-striped table-dark text-white bg-main border-top-0 rounded table-responsive-md" id="situations-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Название</th>
+            <th>Тип</th>
+            <th>Улица</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sit in situations %}
+        <tr>
+            <td>
+                <i class="fas fa-phone {% if sit.attached_units|length > 0 and sit.attached_units|length != 0 %}text-success{% else %}text-danger{% endif %}"></i>
+                {% if user['id'] in sit.attached_units %}<i class="fas fa-paperclip ml-2"></i>{% endif %}
+            </td>
+            <td>{{sit.display_title}}</td>
+            <td>{{sit.display_type}}</td>
+            <td>{{sit.street}}</td>
+            <td>
+                <a onclick="showSituationInfo({{sit.id}})"><i class="fas fa-comments"></i></a>
+                {% if department_type == 2 %}
+                    <a class="ml-2" onclick="showSituationAttach({{sit.id}})"><i class="fas fa-paperclip"></i></a>
+                    <a class="ml-2" onclick="deleteSituation({{sit.id}})"><i class="fas fa-times"></i></a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        
+    </tbody>
+</table> #}
+
+<div id="situations-table">
+{% for sit_key, sit in situations %}
+    {% if department_type == 2 %}
+        <div class="bg-main py-2 px-2 my-1">
+            <div class="row">
+                <div class="col-12 col-lg-7 text-left">
+                    <span class="font-roboto"><b>{{sit['display_title']}}</b>, {{sit['issuer_name']}}</span><br/>
+                    <span class="text-break font-roboto">{{sit['description']}}</span><br/>
+                    <span class="font-roboto">{{sit['street']}}{% if sit['intersected_street']|length > 0 %}, пересечение с {{sit['intersected_street']}}{% endif %}</span>
+                </div>
+                <div class="col-12 col-lg-5 d-flex align-items-center justify-content-end">
+                    <button class="btn btn-unique bg-firebrick" onclick="showSituationAttach({{sit.id}})"><i class="fas fa-plus"></i></button>
+                    <button class="btn btn-amber" onclick="showSituationInfo({{sit.id}})"><i class="fas fa-comments"></i></button>
+                    <button class="btn btn-dark-green" onclick="deleteSituation({{sit.id}})"><i class="fas fa-check"></i></button>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="bg-main py-4 px-3 my-1 rounded">
+            <div class="row">
+                <div class="col-12 col-xl-7 text-left">
+                    <span><i class="fas fa-hashtag"></i> {{sit['display_title']|replace({'#': ''})}}</span><br/>
+                    <span class="text-break"><i class="fas fa-comment-alt"></i> {{sit['description']}}</span><br/>
+                    {% if situation_is_attached[sit_key] == true %}
+                        <span class="text-break"><i class="fas fa-paperclip"></i> Вы прикреплены к вызову в {{situations_attached_info[sit_key]['time']|split(' ')[1]}}.</span><br/>
+                    {% endif %}
+                    {% if situations_attached[sit_key]|length > 0 %}
+                        <span><i class="fas fa-clipboard"></i> {{situations_attached[sit_key]|map(p => "#{p.name}")|join(', ')}}</span>
+                    {% endif %}
+                </div>
+                <div class="col-12 col-xl-5 d-flex align-items-center justify-content-end flex-row">
+                    {% if situation_is_attached[sit_key] == true %}
+                        <button onclick="sendWebsocket('sit-arrived', {sitid: {{sit['id']}}})" class="btn {{situations_attached_info[sit_key]['arrived'] == 0 ? 'btn-dark bg-cst-gray' : 'btn-deep-orange' }}">10-23</button>
+                        <button onclick="sendWebsocket('sit-cfour', {sitid: {{sit['id']}}})" class="btn {{sit['code_4'] == 0 ? 'btn-dark bg-cst-gray' : 'btn-dark-green' }}">CODE 4</button>
+                    {% endif %}
+                    <button class="btn btn-dark bg-cst-gray" onclick="showSituationInfo({{sit.id}})"><i class="fas fa-comments"></i></button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+
+{% if situations|length == 0 %}
+    <div class="text-center grey-text"><h3>Нет активных вызовов</h3></div>
+{% endif %}
+</div>

@@ -1,0 +1,16 @@
+<li class="nav-item avatar dropdown pl-3">
+    <a class="nav-link dropdown-toggle btn-rounded" id="avatar-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% if forum_user['pp_thumb_photo'] != null %}
+            <img src="{{config['forum_root']}}/uploads/{{forum_user['pp_thumb_photo']}}" class="rounded-circle z-depth-0" alt="avatar image">
+        {% else %}
+            <img src="{{config['dir_prefix']}}assets/images/user.png" class="rounded-circle z-depth-0" alt="avatar image">
+        {% endif %}
+    </a>
+    <div class="dropdown-menu dropdown-menu-right dropdown-secondary" aria-labelledby="avatar-dropdown">
+        <a class="dropdown-item" onclick="updateDept(0)">Рабочий стол</a>
+        <a class="dropdown-item" href="{{config['dir_prefix']}}profile">Профиль</a>
+        {% if is_admin %}
+            <a class="dropdown-item" href="{{config['dir_prefix']}}admin/dashboard">Панель администратора</a>
+        {% endif %}
+    </div>
+</li>

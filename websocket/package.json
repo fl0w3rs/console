@@ -1,0 +1,19 @@
+{
+  "name": "cad-ws",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.32",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5",
+    "validatorjs": "^3.22.1",
+    "ws": "^7.4.0"
+  }
+}

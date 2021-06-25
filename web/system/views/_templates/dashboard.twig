@@ -1,0 +1,106 @@
+{% extends "_components/layouts/layout-main.twig" %}
+
+{% block title %}Рабочий стол{% endblock %}
+
+{% block content %}
+<div class="p-3">
+  <div class="d-flex flex-row">
+    <div class="d-flex flex-column flex-wrap">
+        {% for dept in avail_departments %}
+            <div class="desktop-icon p-2 m-2 text-center" onclick="updateDept({{dept.id}})">
+                <div class="desktop-icon-image">
+                    <img src="{{config['dir_prefix']}}/assets/images/desktop_icons/{{dept.name|abbr}}.png?{{version}}" width="32" height="32" alt="">
+                </div>
+                <div class="desktop-icon-text">
+                    <small>{{dept.name|abbr}}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+     <div class="d-flex flex-column flex-wrap">
+        <div class="desktop-icon p-2 m-2 text-center" onclick="gotoForum()">
+            <div class="desktop-icon-image">
+                <img src="{{config['dir_prefix']}}/assets/images/desktop_icons/STLND_LOGO.png?{{version}}" alt="">
+            </div>
+            <div class="desktop-icon-text">
+                <small>Forum</small>
+            </div>
+        </div>
+        <div class="desktop-icon p-2 m-2 text-center" onclick="showAllOfficersModal()">
+            <div class="desktop-icon-image">
+                <img src="{{config['dir_prefix']}}/assets/images/desktop_icons/STEAM.png?{{version}}" alt="">
+            </div>
+            <div class="desktop-icon-text">
+                <small>Officers</small>
+            </div>
+        </div>
+        <div class="desktop-icon p-2 m-2 text-center" onclick="$('#settingsModal').modal('show')">
+            <div class="desktop-icon-image">
+                <img src="{{config['dir_prefix']}}/assets/images/desktop_icons/SETTINGS.png?{{version}}" alt="">
+            </div>
+            <div class="desktop-icon-text">
+                <small>Settings</small>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" name="settingsModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+      <div class="modal-header">
+        <h5 class="modal-title">Настройки</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text-white" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input border-0" accept="image/*" id="dbs-wp">
+          <label class="custom-file-label" for="dbs-wp">Обои рабочего стола</label>
+        </div>
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-block elevation--z1" onclick="updateDashboardWP()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="allOfficersModal" tabindex="-1" role="dialog" name="allOfficersModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+{% endblock %}
+
+{% block styles %}
+<style>
+    #main-content {
+        height: calc(100vh - 57.8px - 64px);
+        background: url({{config['dir_prefix']}}uploads/wallpapers/{{ user['wallpaper']|length > 0 ? user['wallpaper'] : 'DEFAULT.png' }});
+        background-position: center;
+        background-size: cover;
+    }
+
+    .desktop-icon {
+        height: 64px;
+        width: 64px;
+
+        user-select: none;
+        border: 1px solid transparent;
+
+        transition: .1s;
+    }
+
+    .desktop-icon:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/time.js?ver={{version}}"></script>
+{% endblock %}

@@ -1,0 +1,45 @@
+/* ELEVATIONS */
+
+.elevation--z0 {
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.elevation--z1 {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.elevation--z2 {
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+.elevation--z3 {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.elevation--z4 {
+    background-color: rgba(255, 255, 255, 0.09);
+}
+
+.elevation--z6 {
+    background-color: rgba(255, 255, 255, 0.11);
+}
+
+.elevation--z8 {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.elevation--z12 {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.elevation--z16 {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.elevation--z24 {
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.bg-form {
+    background-color: rgba(255, 255, 255, 0.09);
+}

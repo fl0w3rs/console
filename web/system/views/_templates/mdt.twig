@@ -1,0 +1,269 @@
+{% extends "_components/layouts/layout-main.twig" %}
+
+{% block title %}Mobile Data Terminal{% endblock %}
+
+{% block content %}
+
+<input type="hidden" id="currentTemplate" value="mdt">
+
+<div class="row">
+    <div class="mt-2 col-12 col-md-4">
+    
+        <div class="bg-main rounded p-3 mb-5">
+
+            <div class="row">
+                <div class="col-12 col-lg-7">
+                    <h4><i class="fas fa-user"></i> Привет, {{user['name']|split(' ')|last}}</h4>
+                    <l><i class="fas fa-id-badge"></i> {{(forum_user['member_title']|length > 0) ? forum_user['member_title'] : "N/A"}}, <span id="officer-name">{{user['officer_name']|length > 0 ? user['officer_name'] : user['name']|split(' ')|last}}</span></l><br>
+                    <div id="displist" class="mt-1">
+                        <l><i class="fas fa-headset"></i> ACT: NONE</l><br>
+                        <l><i class="fas fa-car"></i> TRF: NONE</l><br>
+                        <l><i class="fas fa-phone-volume"></i> OPR: NONE</l>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-5 d-flex flex-column">
+                    {% include "_components/buttons/button-sto.twig" %}
+                    {% include "_components/buttons/button-panic.twig" %}
+                    {% include "_components/buttons/button-priority.twig" %}
+                </div>
+            </div>
+
+            {% include "_components/status.twig" %}
+
+            <hr>
+
+            <a class="mb-0 h5" data-toggle="collapse" data-target="#dbsearch__collapse" aria-expanded="false" aria-controls="dbsearch__collapse">Поиск по базе <i class="fas fa-search"></i></a>
+            <div class="mt-2 collapse show" id="dbsearch__collapse">
+                <div class="row">
+                    <div class="col-6">
+                        <input type="text" id="dbsearch__query" class="form-control bg-form m-0" placeholder="Запрос">
+                    </div>
+                    <div class="col-6">
+                        <select class="border-0 mdb-select md-outline md-form m-0 ml-2 elevation--z4 rounded" id="dbsearch__type">
+                            <option value="NCIC">NCIC</option>
+                            <option value="DMV">DMV</option>
+                            <option value="FLD">FLD</option>
+                        </select>
+                    </div>
+                    <div class="mt-2 col-12">
+                        <button id="dbsearch__button" class="btn btn-primary btn-block m-0 mb-2">ПОИСК <i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <a class="mb-0 h5" data-toggle="collapse" data-target="#tools__collapse" aria-expanded="false" aria-controls="tools__collapse">Инструменты <i class="fas fa-tools"></i></a>
+            <div class="mt-2 collapse show" id="tools__collapse">
+                <div class="row">
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <button class="btn btn-dark bg-cst-gray btn-block" data-toggle="modal" data-target="#newReportBlankModal" >REPORT BLANK</button>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <button class="btn btn-dark bg-cst-gray btn-block" data-toggle="modal" data-target="#newCaseFileModal">CASE-FILE</button>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <a role="button" target="_blank" href="https://southlandproject.ru/penalcode/" class="btn btn-dark bg-cst-gray btn-block">PENAL&VEHICLE CODE</a>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <a role="button" target="_blank" href="https://southlandproject.ru/%D0%BA%D0%BE%D0%B4%D1%8B/" class="btn btn-dark bg-cst-gray btn-block">TEN CODES</a>
+                    </div>
+                    <div class="col-md-6 col-12 mt-1">
+                        <button class="btn btn-dark bg-cst-gray btn-block" onclick="showReportBlankList()">LIST OF REPORTS</button>
+                    </div>
+
+                    <div class="col-md-6 col-12 mt-1">
+                        <button class="btn btn-dark bg-cst-gray btn-block" onclick="showWarrantList()">LIST OF WARRANTS</button>
+                    </div>
+
+                    <div class="col-12 mt-1">
+                        <button class="btn btn-dark bg-cst-gray btn-block" onclick="showCaseFileList()">LIST OF CASE FILES</button>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <hr>
+
+            <div>
+                <a class="mb-0 h5" data-toggle="collapse" data-target="#notebook__collapse" aria-expanded="false" aria-controls="notebook__collapse">Блокнот <i class="fas fa-clipboard"></i></a>
+                <div class="mt-2 collapse show" id="notebook__collapse">
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark" id="notebook__text" rows="4">{{user['notebook']}}</textarea>
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+    <div class="mt-2 col-12 col-md-8">
+        <div class="mt-2 py-2 rounded">
+            <a class="mt-1 mb-0 h5" data-toggle="collapse" data-target="#situations__collapse" aria-expanded="false" aria-controls="situations__collapse">Все вызовы <i class="fas fa-arrow-down"></i></a>
+            <div class="mt-2 collapse show text-center" id="situations__collapse">
+                {% include "_components/situations.twig" %}
+            </div>
+        </div>
+        <div class="mt-2 py-2 rounded">
+            <a class="mt-1 mb-0 h5" data-toggle="collapse" data-target="#bolo__collapse" aria-expanded="false" aria-controls="bolo__collapse">BOLO <i class="fas fa-arrow-down"></i></a>
+            <div class="mt-2 collapse show text-center" id="bolo__collapse">
+                {% include "_components/bolo.twig" %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ncicModal" tabindex="-1" role="dialog" name="ncicModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="dmvModal" tabindex="-1" role="dialog" name="dmvModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="fldModal" tabindex="-1" role="dialog" name="fldModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="sitInfoModal" tabindex="-1" role="dialog" name="commentsModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div class="modal fade" id="orderListModal" tabindex="-1" role="dialog" name="orderListModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div class="modal fade" id="newCitationModal" tabindex="-1" role="dialog" name="newCitationModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div class="modal fade" id="newArrestModal" tabindex="-1" role="dialog" name="newArrestModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div class="modal fade" id="reportBlankListModal" tabindex="-1" role="dialog" name="reportBlankListModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div class="modal fade" id="newReportBlankModal" tabindex="-1" role="dialog" name="newReportBlankModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header text-center position-relative">
+            <h5 class="modal-title mx-auto">REPORT BLANK</h5>
+        </div>
+        <div class="modal-body" id="newreportblank-form">
+            <div class="row">
+                <div class="col-md-4 col-12 mt-1">
+                    <small class="text-muted">От кого</small>
+                    <input type="text" id="newreportblank-from" class="form-control bg-form">
+                </div>
+                <div class="col-md-4 col-12 mt-1">
+                    <small class="text-muted">Звание/должность</small>
+                    <input type="text" id="newreportblank-rank" class="form-control bg-form">
+                </div>
+                <div class="col-md-4 col-12 mt-1">
+                    <small class="text-muted">Кому</small>
+                    <input type="text" id="newreportblank-to" class="form-control bg-form">
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Описание</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="newreportblank-description" rows="4"></textarea>
+                </div>
+                <div class="col-md-6 col-12 mt-2">
+                    <small class="text-muted">Дата</small>
+                    <input type="text" class="form-control bg-form" value="{{time|date('d/m/Y', 'Europe/Moscow')}}" disabled>
+                </div>
+                <div class="col-md-6 col-12 mt-2">
+                    <small class="text-muted">Время</small>
+                    <input type="time" id="newreportblank-time" class="form-control bg-form" value="{{time|date('H:i', 'Europe/Moscow')}}">
+                </div>
+            </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" data-action="create-new-report-blank" class="btn btn-primary btn-block elevation--z1"><i class="fa fa-paper-plane" aria-hidden="true"></i> Отправить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="newCaseFileModal" tabindex="-1" role="dialog" name="newCaseFileModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header text-center position-relative">
+            <h5 class="modal-title mx-auto">CASE FILE</h5>
+        </div>
+        <div class="modal-body" id="newcasefile-form">
+            <div class="row">
+                <div class="col-12">
+                    <small class="text-muted">Название</small>
+                    <input type="text" id="newcasefile-title" class="form-control bg-form">
+                </div>
+                <div class="col-md-6 col-12 mt-1">
+                    <small class="text-muted">Тяжесть</small>
+                    <select class="border-0 mdb-select m-0 md-outline md-form elevation--z4 rounded" id="newcasefile-severity">
+                        <option value="1" selected>Лёгкая</option>
+                        <option value="2">Средняя</option>
+                        <option value="3">Тяжёлая</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-12 mt-1">
+                    <small class="text-muted">Субъект</small>
+                    <input type="text" id="newcasefile-subject" class="form-control bg-form">
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Описание</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="newcasefile-description" rows="4"></textarea>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Улики</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="newcasefile-evidence" rows="4"></textarea>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Свидетели</small>
+                    <textarea class="form-control bg-form rounded scrollbar scrollbar-dark mt-1" id="newcasefile-witnesses" rows="4"></textarea>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Участвующие детективы</small>
+                    <select class="border-0 mdb-select m-0 md-outline md-form elevation--z4 rounded" id="newcasefile-detectives" multiple searchable="Поиск">
+                        <option disabled selected></option>
+                        {% for user in all_users %}
+                            <option value="{{user.id}}">{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 mt-2">
+                    <small class="text-muted">Преступления</small>
+                    <select id="newcasefile-reasons" class="mt-1 border-0 elevation--z1 text-light scrollbar scrollbar-dark custom-select" size="8" multiple>
+                        {% for k, v in arrest_reasons %}
+                            <option value="{{k}}">{{v}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" data-action="create-new-case-file" class="btn btn-primary btn-block elevation--z1"><i class="fas fa-plus" aria-hidden="true"></i> Создать</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="caseFileModal" tabindex="-1" role="dialog" name="caseFileModal" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<div class="modal fade" id="newOfficerNameModal" tabindex="-1" role="dialog" name="newOfficerNameModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header text-center position-relative">
+            <h5 class="modal-title mx-auto">ИМЯ ОФИЦЕРА</h5>
+        </div>
+        <div class="modal-body" id="non-form">
+            <small class="text-muted">Новое имя</small>
+            <input type="text" id="non-newname" class="form-control bg-form" value="{{user.officer_name}}">
+        </div>
+      <div class="modal-footer">
+        <button type="button" id="non-submit" class="btn btn-primary btn-block elevation--z1">Изменить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block navbar_right_buttons %}
+<a onclick="$('#newOfficerNameModal').modal('show');" class="text-light d-flex align-items-center rounded-pill"><i class="fas fa-user-tie mx-2"></i></a>
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/mdt.js?ver={{version}}"></script>
+
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/priority-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/100-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/buttons/panic-button.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/unit-attach.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/gamezone.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/time.js?ver={{version}}"></script>
+{% endblock %}

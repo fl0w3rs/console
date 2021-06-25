@@ -1,0 +1,45 @@
+{# <table class="table btn-table table-striped table-dark text-white bg-main rounded" id="weapons-table">
+    <thead>
+        <tr>
+            <th>Персонаж</th>
+            <th>Модель</th>
+            <th>Серийный номер</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for char_key, char_value in characters %}
+            {% for weap in characters_weapons[char_key] %}
+            <tr>
+                <td>{{char_value.name}}</td>
+                <td>{{weap.model}}</td>
+                <td>{{weap.serial}}</td>
+                <td>
+                    <button class="btn btn-rounded btn-flat btn-sm m-0" type="button" onclick="deleteWeapon({{weap.id}})">
+                        Удалить
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+        
+    </tbody>
+</table> #}
+
+<div class="row text-center" id="weapons-table">
+    {% for char_key, char_value in characters %}
+        {% for weap in characters_weapons[char_key] %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 my-2 text-break">
+                
+                <div class="bg-main py-4 px-2 d-flex flex-column position-relative rounded ">
+                    <div class="position-absolute" style="right: 8px; top: 0px;">
+                        <a onclick="deleteWeapon({{weap.id}})"><i class="fas fa-times text-light"></i></a>
+                    </div>
+                    <span class="font-weight-bold h4">{{weap.model}}</span>
+                    <span>{{weap.serial}}</span>
+                    {# <span class="grey-text">{{char_value.name}}</span> #}
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>

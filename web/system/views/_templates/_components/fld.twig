@@ -1,0 +1,20 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header">
+            <h5 class="modal-title">FLD</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="rounded font-hack">
+
+                Модель: {{fld_weapon.model}};<br/>
+                Серийный номер: {{fld_weapon.serial}};<br/>
+                <br/>
+                Владелец: <a class="text-primary" onclick="ncicSearch('{{owner.ssn}}')">{{owner.name}}</a>
+
+            </div>
+        </div>
+    </div>
+</div>

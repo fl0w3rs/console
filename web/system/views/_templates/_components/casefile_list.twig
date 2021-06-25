@@ -1,0 +1,30 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header">
+            <h5 class="modal-title">Список кейс-файлов</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span class="text-white" aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row mx-1">
+                <div class="col-12"> 
+                    <div class="row user-select-none">
+                        <div class="col-6 m-0 my-2">Название / номер дела</div>
+                        <div class="col-3 m-0 my-2 text-center">Тяжесть</div>
+                        <div class="col-3 text-right m-0 my-2">Статус</div>
+                    </div>
+                </div>
+                {% for cf in casefiles %}
+                    <div class="col-12 mt-1 elevation--z1"> 
+                        <a onclick="viewCaseFile({{cf.id}})"><div class="row user-select-none">
+                            <div class="col-6 m-0 my-2">{{cf.title}} / Дело №{{cf.id}}</div>
+                            <div class="col-3 m-0 my-2 text-center">{% if cf.severity == 1 %}Лёгкая{% elseif cf.severity == 2 %}Средняя{% elseif cf.severity == 3 %}Тяжёлая{% endif %}</div>
+                            <div class="col-3 text-right m-0 my-2">{% if cf.status == 0 %}<span class="text-success">Открыто</span>{% elseif cf.status == 1 %}<span class="orange-text">Заморожено</span>{% elseif cf.status == 2 %}<span class="red-text">Закрыто</span>{% endif %}</div>
+                        </div></a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

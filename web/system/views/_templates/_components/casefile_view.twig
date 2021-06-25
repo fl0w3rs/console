@@ -1,0 +1,45 @@
+<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-light text-dark">
+        <div class="modal-header position-relative w-100 p-0">
+            <div class="position-absolute w-100 p-3">
+                {% if access == true %}<a onclick="editCaseFile({{casefile.id}})"><i class="fas fa-pencil-alt"></i></a>{% endif %}
+                <button type="button" class="close ml-auto" data-dismiss="modal" aria-label="Close">
+                    <span class="text-dark" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <h5 class="mx-auto p-3">{{casefile.title}} / Дело №{{casefile.id}}</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row position-relative">
+                <div class="position-absolute w-100 d-flex justify-content-center align-items-center">
+                </div>
+                <div class="col-12 col-md-6">Статус: <span class="font-weight-bold">{% if casefile.status == 0 %}<span class="text-success">Открыто</span>{% elseif casefile.status == 1 %}<span class="orange-text">Заморожено</span>{% elseif casefile.status == 2 %}<span class="red-text">Закрыто</span>{% endif %}</span></div>
+                <div class="col-12 col-md-6 text-md-right">Тяжесть: <span class="font-weight-bold">{% if casefile.severity == 1 %}Лёгкая{% elseif casefile.severity == 2 %}Средняя{% elseif casefile.severity == 3 %}Тяжёлая{% endif %}</span></div>
+                <div class="col-12 col-md-6">Подозреваемый: <span class="font-weight-bold">{{casefile.subject}}</span></div>
+                <div class="col-12 col-md-6 text-md-right">Ведущий детектив: <span class="font-weight-bold">{{lead_detective['name']}}</span></div>
+                <div class="col-12 text-center"><img src="{{config['dir_prefix']}}assets/images/detective__emblem.png" width="128" height="128" alt=""></div>
+                <div class="col-12 mt-2 text-center">ОПИСАНИЕ:<br><small>{{casefile.description|replace({'\n': '<br>'})|raw}}</small></div>
+                <div class="col-12 mt-2 text-center">УЛИКИ:<br><small>{{casefile.evidence|replace({'\n': '<br>'})|raw}}</small></div>
+                <div class="col-12 mt-2 text-center">СВИДЕТЕЛИ:<br><small>{{casefile.witnesses|replace({'\n': '<br>'})|raw}}</small></div>
+                <div class="col-12 col-md-6 mt-2">Преступления:<br>{% for rsn in casefile.reasons|split(',') %}<small>• {{arrest_reasons[rsn]}}</small><br>{% endfor %}</div>
+                <div class="col-12 col-md-6 mt-2 text-md-right">Участвующие детективы:<br>{% for det in detectives %}<small>• {{det['name']}}</small><br>{% endfor %}</div>
+                
+                {% for comment in comments %}
+                    <div class="col-12 text-center">
+                        <hr>
+                        <span class="font-weight-bold">{{comment['creator_name']}} дополнил дело:</span><br/>
+                        {{comment['text']|raw}}
+                    </div>
+                {% endfor %}
+
+                {% if access == true %}
+                <div class="col-12">
+                    <hr>
+                    <textarea class="form-control elevation--z4 rounded scrollbar scrollbar-dark mt-1 enable-border border-dark form-dark" id="cf-addition" rows="4"></textarea>
+                    <button class="btn btn-primary btn-block mt-3" onclick="sendCommentToCf({{casefile.id}})">Отправить</button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

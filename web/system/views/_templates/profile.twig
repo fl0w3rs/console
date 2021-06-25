@@ -1,0 +1,27 @@
+{% extends "_components/layouts/layout-main.twig" %}
+
+{% block title %}Настройки{% endblock %}
+
+{% block beforecontainer %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="mt-3 col-12 col-md-8 col-lg-6">
+        <div class="py-2 bg-main rounded text-center">
+            <h2>{{forum_user['name']}}</h2>
+            <div class='px-5 pt-2'>
+                <input type="text" value="{{user['steam_id']}}" id="profile-steamid" class="form-control bg-form" placeholder="SteamID">
+                <input type="button" data-action="edit" class="btn btn-lg btn-flat" value="Сохранить">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/profile.js?ver={{version}}"></script>
+<script type="text/javascript" src="{{config['dir_prefix']}}assets/js/time.js?ver={{version}}"></script>
+{% endblock %}

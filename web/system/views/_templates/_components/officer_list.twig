@@ -1,0 +1,27 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-main">
+        <div class="modal-header text-center position-relative">
+            <h5 class="modal-title mx-auto">LIST OF OFFICERS</h5>
+        </div>
+        <div class="modal-body" id="non-form">
+            <div class="row mx-2">
+                <div class="col-12"> 
+                    <div class="row user-select-none">
+                        <div class="col-6 m-0 my-2">Участник сообщества</div>
+                        <div class="col-6 text-right m-0 my-2">Имя персонажа</div>
+                    </div>
+                </div>
+                {% for officer in officers %}
+                    {% if officer.officer_name|length > 0 %}
+                    <div class="col-12 mt-1 elevation--z1"> 
+                        <div class="row user-select-none">
+                            <div class="col-6 m-0 my-2">{{officer.name}}</div>
+                            <div class="col-6 m-0 my-2 text-right">{{officer.officer_name}}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

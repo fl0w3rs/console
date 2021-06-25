@@ -1,0 +1,5 @@
+<div id="status-buttons" class="d-flex flex-row mt-2">
+    <button onclick="playClick(); sendWebsocket('update-status', {status: 2})"  class="btn {{ avail.status == 2 ? 'btn-danger' : 'btn-dark bg-cst-gray' }} btn-lg btn-block mx-2">10-7</button>
+    <button onclick="playClick(); sendWebsocket('update-status', {status: 1})" class="btn {{ avail.status == 1 ? 'btn-success' : 'btn-dark bg-cst-gray' }} btn-lg btn-block mx-2">10-8</button>
+    <button onclick="playClick(); sendWebsocket('update-status', {status: 3})"  class="btn {{ avail.status == 3 ? 'btn-primary' : 'btn-dark bg-cst-gray' }} btn-lg btn-block mx-2">10-6</button>
+</div>

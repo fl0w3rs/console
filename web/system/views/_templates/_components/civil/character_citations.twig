@@ -1,0 +1,24 @@
+
+<div class="row text-center" id="citations-table">
+    {% for char_key, char_value in characters %}
+        {% for cit in characters_citations[char_key] %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 my-2 text-break">
+                <div class="bg-main p-3 rounded border-bottom {% if cit.status == 0 %}{% if cit.expired == true %}border-danger{% else %}border-warning{% endif %}{% elseif cit.status == 1 %}border-success{% endif %}">
+                    <div class="row">
+                        <div class="col-12 {% if cit.status == 0 %}col-xl-8{% endif %} text-left">
+                            <div class="text-success h3 font-weight-bold">${{cit.amount}}</div>
+                            <small class="text-muted">{{cit.time}}, {{cit.created_time|date('d/m/Y')}}</small><br>
+                            <small class="">{{char_value.name}}</small>
+                        </div>
+                        {% if cit.status == 0 %}
+                        <div class="col-12 col-xl-4">
+                            <a class="btn-success btn-floating btn-sm" onclick="payCitation({{cit.id}})"><i class="fas fa-dollar-sign"></i></a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
