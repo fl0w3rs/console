@@ -6,5 +6,5 @@
 **Любая попытка продать эту ПУБЛИЧНУЮ БАЗУ ДАННЫХ - это мошенничество, Вы можете получить её совершенно бесплатно.**
 
 ## Разработчики
-Веб часть: [**fl0w3rs**](https://vk.com/fl0w3rs), [**f0xitcode**](https://vk.com/foxitcode)
-Дизайн: [**peacefulisac**](https://vk.com/peacefulisacdev)
+Веб часть: [**fl0w3rs**](https://vk.com/fl0w3rs), [**f0xitcode**](https://vk.com/foxitcode).
+Дизайн: [**peacefulisac**](https://vk.com/peacefulisacdev).
