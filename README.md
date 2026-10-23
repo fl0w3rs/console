@@ -1,52 +1,52 @@
 # Console
 
-Веб-система CAD/MDT (Computer Aided Dispatch / Mobile Data Terminal) для ролевого игрового сервера: рабочее место диспетчера, бортовой компьютер патрульных юнитов и база данных гражданских персонажей. Сделана в 2020 году для проекта Southland, работала в продакшене на живом сообществе.
+A CAD/MDT (Computer Aided Dispatch / Mobile Data Terminal) web system for a GTA roleplay server: a dispatcher workstation, an in-car terminal for patrol units and a database of civilian characters. Built in 2020 for the Southland project and used in production by a live community. The interface is in Russian.
 
 ![MDT](docs/screenshots/02-mdt.png)
 
-## Скриншоты
+## Screenshots
 
 | | |
 |---|---|
-| ![Рабочий стол](docs/screenshots/01-dashboard.jpg) Рабочий стол с выбором департамента | ![CAD](docs/screenshots/06-cad.png) Диспетчерская (CAD) |
-| ![NCIC](docs/screenshots/03-ncic.png) Поиск по базе NCIC | ![Ордера](docs/screenshots/04-warrants.png) Ордера |
-| ![Дело](docs/screenshots/05-casefile.png) Дело (case file) | ![Civil](docs/screenshots/07-civil.png) Гражданская часть |
+| ![Desktop](docs/screenshots/01-dashboard.jpg) Desktop with department selection | ![CAD](docs/screenshots/06-cad.png) Dispatch (CAD) |
+| ![NCIC](docs/screenshots/03-ncic.png) NCIC database lookup | ![Warrants](docs/screenshots/04-warrants.png) Warrants |
+| ![Case file](docs/screenshots/05-casefile.png) Case file | ![Civil](docs/screenshots/07-civil.png) Civilian side |
 
-## Возможности
+## Features
 
-- **Диспетчерская (CAD)** — вызовы и ситуации, прикрепление юнитов к вызовам, статусы юнитов в реальном времени, кнопки паники, приоритета и Signal 100.
-- **MDT** — поиск по базам NCIC/DMV, ориентировки (BOLO), штрафы, аресты, ордера с подписью и исполнением, дела (case files) с комментариями, бланки рапортов.
-- **Гражданская часть** — персонажи с фото, медкартой, транспортом и оружием, оплата штрафов.
-- **Админка** — управление департаментами и игровой зоной (AOP).
-- **Интеграция с игрой** — сервер может опрашивать API, чтобы узнать текущую зону и включён ли Signal 100.
-- **Авторизация через форум** — вход по сессии форума IPS4, права зависят от группы пользователя.
-- **Realtime** — обновления через WebSocket-сервер: PHP-бэкенд шлёт события, клиенты получают их без перезагрузки.
+- **Dispatch (CAD)**: calls, attaching units to calls, real-time unit statuses, panic, priority and Signal 100 buttons.
+- **MDT**: NCIC/DMV lookups, BOLOs, citations, arrests, warrants with signing and execution, case files with comments, report forms.
+- **Civilian side**: characters with photos, medical records, vehicles and weapons; paying citations.
+- **Admin**: departments and the area of play (AOP).
+- **Game integration**: the game server can poll an API for the current area of play and the Signal 100 state.
+- **Forum login**: sign-in uses the IPS4 forum session, and permissions come from the user's forum groups.
+- **Real time**: updates go through a WebSocket server. The PHP backend publishes events and clients receive them without reloading.
 
-## Стек
+## Stack
 
-- **Веб-часть:** PHP 7, MySQL ([RedBeanPHP](https://redbeanphp.com/)), [Twig](https://twig.symfony.com/), jQuery, MDBootstrap.
-- **Realtime-сервер:** Node.js, [ws](https://github.com/websockets/ws), Sequelize.
+- **Web app:** PHP 7, MySQL ([RedBeanPHP](https://redbeanphp.com/)), [Twig](https://twig.symfony.com/), jQuery, MDBootstrap.
+- **Real-time server:** Node.js, [ws](https://github.com/websockets/ws), Sequelize.
 
-## Структура
+## Structure
 
 ```
-console.sql            схема базы данных
-web/                   веб-часть (PHP)
-  index.php            маршруты
+console.sql            database schema
+web/                   web app (PHP)
+  index.php            routes
   system/
-    config.php         настройки (БД, форум, WebSocket)
-    api/               JSON-эндпоинты: персонажи, штрафы, ордера, дела…
-    views/             Twig-шаблоны и обработчики страниц
-    libraries/         роутер, RedBeanPHP, WebSocket-клиент
-  assets/              стили и клиентский JS
-websocket/             realtime-сервер (Node.js)
-  main.js              обработчики событий: вызовы, юниты, ориентировки…
-  db.js                модели Sequelize
+    config.php         settings (databases, forum, WebSocket)
+    api/               JSON endpoints: characters, citations, warrants, case files…
+    views/             Twig templates and page handlers
+    libraries/         router, RedBeanPHP, WebSocket client
+  assets/              styles and client-side JS
+websocket/             real-time server (Node.js)
+  main.js              event handlers: calls, units, BOLOs…
+  db.js                Sequelize models
 ```
 
-## Запуск
+## Running
 
-1. Импортировать `console.sql` в MySQL.
-2. **WebSocket-сервер:** в `websocket/` скопировать `.env.example` в `.env` и заполнить его, затем выполнить `yarn install` и `yarn start`.
-3. **Веб-часть:** заполнить `web/system/config.php`: доступы к базам CAD и форума IPS4, `dir_prefix`, `forum_root` и параметры WebSocket (`ws_host`, `ws_port`, `ws_ssl` для PHP, `ws_public_url` для браузера, `ws_server_token` — тот же, что `SERVER_TOKEN` в `.env`). Затем в `web/` выполнить `composer install`.
-4. Отдавать `web/` через Apache с `mod_rewrite`. `RewriteBase` в `.htaccess` должен совпадать с `dir_prefix`.
+1. Import `console.sql` into MySQL.
+2. **WebSocket server:** in `websocket/`, copy `.env.example` to `.env` and fill it in, then run `yarn install` and `yarn start`.
+3. **Web app:** fill in `web/system/config.php`: credentials for the CAD and IPS4 forum databases, `dir_prefix`, `forum_root` and the WebSocket settings (`ws_host`, `ws_port`, `ws_ssl` for PHP, `ws_public_url` for the browser, and `ws_server_token`, which must match `SERVER_TOKEN` in `.env`). Then run `composer install` in `web/`.
+4. Serve `web/` with Apache and `mod_rewrite`. `RewriteBase` in `.htaccess` must match `dir_prefix`.
